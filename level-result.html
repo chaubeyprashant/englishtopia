@@ -21,7 +21,7 @@
       background: #f4f7fa;
     }
 
-    /* Sidebar (consistent with main and books pages) */
+     /* Sidebar */
     .sidebar {
       width: 260px;
       background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
@@ -176,16 +176,16 @@
   </style>
 </head>
 <body>
-  <nav class="sidebar">
+  <div class="sidebar">
     <div class="logo">Englishtopia</div>
-    <button class="nav-button" data-action="home">🏠 Home</button>
-    <button class="nav-button" data-action="quizzes">❓ Quizzes</button>
-    <button class="nav-button active" data-action="test">♜ Test your level</button>
-    <button class="nav-button" data-action="videos">🎥 Videos</button>
-    <button class="nav-button" data-action="books">📖 Books</button>
-    <button class="nav-button" data-action="profile">⚔️ Profile</button>
-    <button class="nav-button" data-action="settings">🪶 Settings</button>
-  </nav>
+    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
+    <a href="level-test.html" class="nav-button">♜ Test your level</a>
+    <a href="videos.html" class="nav-button">🎥 Videos</a>
+    <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="profile.html" class="nav-button">⚔️ Profile</a>
+    <a href="settings.html" class="nav-button">🪶 Settings</a>
+  </div>
   <main class="container" id="result-box"></main>
   <script>
     // Calculate score and render result
