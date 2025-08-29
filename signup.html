@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -224,6 +225,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">Englishtopia</div>
@@ -248,63 +250,55 @@
     </form>
     <p id="signup-message"></p>
   </main>
-  <script>
-    // Placeholder for signupUser function (assumed to be in app.js)
-    function signupUser(username, email, pass) {
-      // Replace with actual signup logic
-      if (username && email && pass) {
-        return { success: true, message: "Account created! Redirecting to login..." };
-      }
-      return { success: false, message: "Invalid username, email, or password" };
-    }
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Form submission handler
-    document.getElementById("signupForm").addEventListener("submit", function (e) {
+    // 🔹 Replace with your Firebase project config
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6ubtFQ2w6Oe1poQtGEQR5xXgWTnnP8eM",
+      authDomain: "english-topia.firebaseapp.com",
+      projectId: "english-topia",
+      storageBucket: "english-topia.firebasestorage.app",
+      messagingSenderId: "G-LDESF481CF",
+      appId: ":374842038898:web:f1890835d4cee61d2d00eb"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Handle form submission
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const username = document.getElementById("signup-username").value;
       const email = document.getElementById("signup-email").value;
-      const pass = document.getElementById("signup-password").value;
-      const result = signupUser(username, email, pass);
+      const password = document.getElementById("signup-password").value;
       const msg = document.getElementById("signup-message");
-      if (result.success) {
+
+      try {
+        // Create user with email & password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 🔹 Save username in Firebase profile
+        await updateProfile(user, { displayName: username });
+
         msg.style.color = "green";
         msg.textContent = "Account created! Redirecting to login...";
-        setTimeout(() => window.location.href = "login.html", 1000);
-      } else {
+
+        // Redirect to login page after signup
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1200);
+      } catch (error) {
         msg.style.color = "red";
-        msg.textContent = result.message;
+        msg.textContent = error.message;
       }
-    });
-
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
-      });
-    }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => window.location.href = 'settings.html');
-
-    // Event handler for signup button (form submission already handled)
-    addEventListeners('[data-action="signup"]', 'Signup button', () => {
-      document.getElementById("signupForm").dispatchEvent(new Event('submit'));
     });
   </script>
 </body>
+
 </html>

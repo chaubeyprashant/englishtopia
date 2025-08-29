@@ -191,6 +191,7 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
       cursor: pointer;
       transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
     }
 
     .test-button:hover {
@@ -274,7 +275,7 @@
   <div class="main-content">
     <div class="close-btn" onclick="alert('Close clicked')">&#10006;</div>
     <h1>Your Multi-Media English Learning Hub</h1>
-    <div class="video-box" onclick="alert('Video play')">
+    <div class="video-box" onclick="window.location.href='videos.html'">
       <div class="triangle"></div>
     </div>
     <div class="image-container">
@@ -284,7 +285,7 @@
     <div class="description">
       Begin your journey by taking a test to see what level you are currently at
     </div>
-    <button class="test-button" onclick="alert('Test started')">Take the Test</button>
+    <a href="quizzes.html" class="test-button" onclick="alert('Test started')">Take the Test</a>
   </div>
 </body>
 

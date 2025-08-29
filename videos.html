@@ -232,42 +232,20 @@
     </div>
   </main>
   <script>
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
+    const videoLinks = {
+      "watch-video-1": "https://www.youtube.com/watch?v=36GHWmJZsmw",
+      "watch-video-2": "https://www.youtube.com/watch?v=2_zR3rL-dMM",
+      "watch-video-3": "https://www.youtube.com/watch?v=2aXKfZQ3VfE"
+    };
+  
+    document.querySelectorAll("button[data-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.getAttribute("data-action");
+        if (videoLinks[action]) {
+          window.open(videoLinks[action], "_blank"); // opens in new tab
+        }
       });
-    }
-
-    // Placeholder function for watching videos
-    function watchVideo(videoId) {
-      alert(`Playing video: ${videoId}`);
-      // Replace with actual video link or player logic, e.g.:
-      // window.location.href = `video-player.html?video=${videoId}`;
-    }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => window.location.href = 'videos.html');
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => window.location.href = 'settings.html');
-
-    // Event handlers for video buttons
-    addEventListeners('[data-action="watch-video-1"]', 'Video 1 button', () => watchVideo('Interesting Video 1'));
-    addEventListeners('[data-action="watch-video-2"]', 'Video 2 button', () => watchVideo('Interesting Video 2'));
-    addEventListeners('[data-action="watch-video-3"]', 'Video 3 button', () => watchVideo('Interesting Video 3'));
-  </script>
+    });
+  </script>  
 </body>
 </html>
