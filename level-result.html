@@ -247,15 +247,6 @@
       });
     }
 
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => alert('Profile clicked'));
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
-
     // Event handlers for result buttons
     addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'index.html');
     addEventListeners('[data-action="retake"]', 'Retake button', () => window.location.href = 'level-test.html');

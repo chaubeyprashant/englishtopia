@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -207,6 +208,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">Englishtopia</div>
@@ -255,20 +257,10 @@
       });
     }
 
-    // Quiz start function
     function startQuiz(level) {
-      alert(`Starting quiz: ${level}`);
-      window.location.href = "level-test.html";
+      localStorage.setItem("quizLevel", level); // save user choice
+      window.location.href = "level-test.html"; // redirect
     }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
 
     // Event handlers for quiz buttons
     addEventListeners('[data-action="start-rogue"]', 'Rogue quiz button', () => startQuiz('rogue'));
@@ -276,4 +268,5 @@
     addEventListeners('[data-action="start-honored"]', 'Honored Warrior quiz button', () => startQuiz('honored'));
   </script>
 </body>
+
 </html>

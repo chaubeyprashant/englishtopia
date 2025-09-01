@@ -281,15 +281,6 @@
       window.location.href = 'index.html';
     }
 
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => window.location.href = 'settings.html');
-
     // Event handlers for settings actions
     addEventListeners('[data-action="reset-data"]', 'Reset Data button', resetData);
     addEventListeners('[data-action="delete-account"]', 'Delete Account button', deleteAccount);

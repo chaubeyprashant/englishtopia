@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,6 +230,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">Englishtopia</div>
@@ -249,10 +251,47 @@
     </div>
   </main>
   <script>
-    const questions = [
-      { text: "Choose the synonym of 'fast'", options: ["Quick", "Slow", "Late"], answer: 0 },
-      { text: "Fill the blank: She ___ to school.", options: ["go", "goes", "gone"], answer: 1 }
-    ];
+    const allQuizzes = {
+      rogue: [
+        { text: "Choose the synonym of 'fast'", options: ["Quick", "Slow", "Late"], answer: 0 },
+        { text: "She ___ to school.", options: ["go", "goes", "gone"], answer: 1 },
+        { text: "Opposite of 'happy'?", options: ["Sad", "Joyful", "Excited"], answer: 0 },
+        { text: "They ___ playing football yesterday.", options: ["is", "are", "were"], answer: 2 },
+        { text: "Correct article: He bought ___ apple.", options: ["a", "an", "the"], answer: 1 },
+      ],
+      knight: [
+        { text: "Which sentence is correct?", options: ["She don’t like tea.", "She doesn’t like tea.", "She not like tea."], answer: 1 },
+        { text: "I ___ him before.", options: ["saw", "have seen", "seeing"], answer: 1 },
+        { text: "He ___ to the market every day.", options: ["go", "goes", "gone"], answer: 1 },
+        { text: "Which one is a noun?", options: ["Run", "Quickly", "Happiness"], answer: 2 },
+        { text: "She is interested ___ music.", options: ["on", "in", "at"], answer: 1 },
+        { text: "If it rains, we ___ stay home.", options: ["will", "would", "shall"], answer: 0 },
+        { text: "Synonym of 'angry'", options: ["Furious", "Calm", "Happy"], answer: 0 },
+        { text: "Which is past tense?", options: ["She eats breakfast.", "She ate breakfast.", "She is eating breakfast."], answer: 1 },
+        { text: "They ___ tennis now.", options: ["play", "are playing", "played"], answer: 1 },
+        { text: "Question tag: You’re coming, ___?", options: ["aren’t you", "isn’t you", "don’t you"], answer: 0 },
+      ],
+      honored: [
+        { text: "Which one is an adjective?", options: ["Blue", "Run", "Happily"], answer: 0 },
+        { text: "This is the ___ book I’ve ever read.", options: ["more interesting", "most interesting", "interesting"], answer: 1 },
+        { text: "She has lived here ___ 2010.", options: ["for", "since", "from"], answer: 1 },
+        { text: "Correct plural form?", options: ["Childs", "Children", "Childes"], answer: 1 },
+        { text: "He is taller ___ his brother.", options: ["than", "then", "to"], answer: 0 },
+        { text: "Synonym of 'begin'", options: ["End", "Start", "Finish"], answer: 1 },
+        { text: "Which is future tense?", options: ["She will call you.", "She is calling you.", "She called you."], answer: 0 },
+        { text: "The car is ___ the garage.", options: ["in", "on", "at"], answer: 0 },
+        { text: "Which one is a verb?", options: ["Run", "Beautiful", "Quick"], answer: 0 },
+        { text: "Choose the synonym of 'difficult'", options: ["Easy", "Hard", "Simple"], answer: 1 },
+        { text: "Correct past participle of 'go'?", options: ["go", "went", "gone"], answer: 2 },
+        { text: "Which sentence is correct?", options: ["He don’t know.", "He doesn’t know.", "He not know."], answer: 1 },
+        { text: "Fill the blank: I have ___ my homework.", options: ["did", "done", "doing"], answer: 1 },
+        { text: "Opposite of 'brave'?", options: ["Courageous", "Cowardly", "Strong"], answer: 1 },
+        { text: "Which is a conjunction?", options: ["And", "Quickly", "Happy"], answer: 0 },
+      ]
+    };
+    const quizLevel = localStorage.getItem("quizLevel") || "rogue"; 
+    const questions = allQuizzes[quizLevel]; 
+
     let index = 0;
     let answers = [];
 
@@ -308,15 +347,6 @@
       });
     }
 
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => alert('Profile clicked'));
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
-
     // Event handlers for test buttons
     addEventListeners('[data-action="previous"]', 'Previous button', previousQuestion);
     addEventListeners('[data-action="next"]', 'Next button', nextQuestion);
@@ -325,4 +355,5 @@
     renderQuestion();
   </script>
 </body>
+
 </html>
