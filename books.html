@@ -239,21 +239,21 @@
     </div>
   </main>
   <script>
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
+    const bookLinks = {
+      "read-book1": "https://elt.oup.com/student/bookworms/?cc=global&selLanguage=en",
+      "read-book2": "https://eslpdfs.com/short-stories/",
+      "read-book3": "https://www.gutenberg.org/ebooks/1342",
+      "read-book4": "https://learnenglish.britishcouncil.org/grammar"
+    };
+  
+    document.querySelectorAll("button[data-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.getAttribute("data-action");
+        if (bookLinks[action]) {
+          window.open(bookLinks[action], "_blank");
+        }
       });
-    }
-  </script>
+    });
+  </script>  
 </body>
 </html>

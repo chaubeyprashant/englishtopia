@@ -268,62 +268,50 @@
     <p class="register-link">Don’t have an account? <a href="signup.html">Register</a></p>
     <p id="login-message"></p>
   </main>
-  <script>
-    // Placeholder for loginUser function (assumed to be in app.js)
-    function loginUser(email, pass) {
-      // Replace with actual login logic
-      if (email && pass) {
-        return { success: true, message: "Login successful!" };
-      }
-      return { success: false, message: "Invalid email or password" };
+  <!-- Add Firebase SDK -->
+<script type="module">
+  // Import Firebase SDK (modular v9+)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // Your Firebase Config (Replace with your Firebase project config)
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6ubtFQ2w6Oe1poQtGEQR5xXgWTnnP8eM",
+    authDomain: "english-topia.firebaseapp.com",
+    projectId: "english-topia",
+    storageBucket: "english-topia.firebasestorage.app",
+    messagingSenderId: "G-LDESF481CF",
+    appId: ":374842038898:web:f1890835d4cee61d2d00eb"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Handle form submission
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    const msg = document.getElementById("login-message");
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      msg.style.color = "green";
+      msg.textContent = "Login successful! Redirecting...";
+
+      // Redirect to profile page after login
+      setTimeout(() => {
+        window.location.href = "profile.html";
+      }, 1200);
+    } catch (error) {
+      msg.style.color = "red";
+      msg.textContent = error.message;
     }
-
-    // Form submission handler
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value;
-      const pass = document.getElementById("login-password").value;
-      const result = loginUser(email, pass);
-      const msg = document.getElementById("login-message");
-      if (result.success) {
-        msg.style.color = "green";
-        msg.textContent = "Login successful!";
-        setTimeout(() => window.location.href = "profile.html", 1000);
-      } else {
-        msg.style.color = "red";
-        msg.textContent = result.message;
-      }
-    });
-
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
-      });
-    }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'login.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
-
-    // Event handler for login button (form submission already handled)
-    addEventListeners('[data-action="login"]', 'Login button', () => {
-      document.getElementById("loginForm").dispatchEvent(new Event('submit'));
-    });
-  </script>
+  });
+</script>
 </body>
 </html>

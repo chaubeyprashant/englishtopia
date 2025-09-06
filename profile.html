@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -203,6 +204,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">Englishtopia</div>
@@ -215,60 +217,75 @@
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
   <main class="container" id="profile-box"></main>
+
+  <!-- Use the compatibility version of Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
   <script>
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6ubtFQ2w6Oe1poQtGEQR5xXgWTnnP8eM",
+      authDomain: "english-topia.firebaseapp.com",
+      projectId: "english-topia",
+      storageBucket: "english-topia.firebasestorage.app",
+      messagingSenderId: "G-LDESF481CF",
+      appId: "1:374842038898:web:f1890835d4cee61d2d00eb"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    
+    const box = document.getElementById("profile-box");
+    
+    // Function to format date
+    function formatDate(dateString) {
+      if (!dateString) return 'Unknown';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
       });
     }
 
-    // Profile rendering logic
-    const loggedIn = localStorage.getItem("loggedIn");
-    const box = document.getElementById("profile-box");
+    // Listen for auth state changes
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is logged in
+        const username = user.displayName || user.email;
+        const joined = formatDate(user.metadata.creationTime);
+        const lastLogin = formatDate(user.metadata.lastSignInTime);
 
-    if (loggedIn) {
-      box.innerHTML = `
-        <h2>Your Profile</h2>
-        <p><b>Name:</b> Demo User</p>
-        <p><b>Joined:</b> 1 Jan 2025</p>
-        <p><b>Level:</b> B1</p>
-        <button data-action="logout">Logout</button>
-      `;
-    } else {
-      box.innerHTML = `
-        <p>You are not logged in.</p>
-        <a href="login.html"><button data-action="login">Login</button></a>
-      `;
-    }
+        box.innerHTML = `
+          <h2>Your Profile</h2>
+          <p><b>Name:</b> ${username}</p>
+          <p><b>Email:</b> ${user.email}</p>
+          <p><b>Joined:</b> ${joined}</p>
+          <p><b>Last Login:</b> ${lastLogin}</p>
+          <button id="logout-btn">Logout</button>
+        `;
+        
+        // Add event listener to the logout button
+        document.getElementById('logout-btn').addEventListener('click', logout);
+      } else {
+        // User not logged in
+        box.innerHTML = `
+          <p>You are not logged in.</p>
+          <a href="login.html"><button>Login</button></a>
+        `;
+      }
+    });
 
     // Logout function
     function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "index.html";
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        console.error("Logout error:", error);
+      });
     }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
-
-    // Event handlers for profile buttons
-    addEventListeners('[data-action="logout"]', 'Logout button', logout);
-    addEventListeners('[data-action="login"]', 'Login button', () => window.location.href = 'login.html');
-  </script>
+  </script>  
 </body>
+
 </html>

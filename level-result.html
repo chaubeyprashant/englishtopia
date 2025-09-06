@@ -123,6 +123,30 @@
       background: #21867a;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      margin: 8px 0;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(6px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -222,15 +246,6 @@
         });
       });
     }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => alert('Profile clicked'));
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
 
     // Event handlers for result buttons
     addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'index.html');
