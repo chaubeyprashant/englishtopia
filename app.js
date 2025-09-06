@@ -7,7 +7,7 @@
  * Defines the navigation items for the sidebar/header
  */
 const navItems = [
-  { href: "index.html", label: "Home" },
+  { href: "homepage.html", label: "Home" },
   { href: "quizzes.html", label: "Quizzes" },
   { href: "level-test.html", label: "Test" },
   { href: "videos.html", label: "Videos" },
@@ -160,7 +160,7 @@ function addEventListeners(selector, action, callback) {
  */
 function setupNavigation() {
   // Home navigation
-  addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
+  addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'homepage.html');
   
   // Quizzes navigation
   addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
