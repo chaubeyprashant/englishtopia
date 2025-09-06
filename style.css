@@ -135,13 +135,15 @@ body {
   padding: 50px;
   background: linear-gradient(180deg, #ffffff, #f9fafb);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 100px);
+  flex: 1;
   padding: 40px;
   position: relative;
 }

@@ -20,7 +20,8 @@
   </div>
   <main class="container">
     <h2>Login</h2>
-    <form id="loginForm" class="form-container">
+    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+      <form id="loginForm" class="form-container">
       <div class="form-group">
         <label for="login-email">Email</label>
         <input type="email" id="login-email" required>
@@ -29,10 +30,11 @@
         <label for="login-password">Password</label>
         <input type="password" id="login-password" required>
       </div>
-      <button type="submit" class="btn" data-action="login">Login</button>
-    </form>
-    <p class="register-link">Don't have an account? <a href="signup.html">Register</a></p>
-    <p id="login-message" class="message"></p>
+        <button type="submit" class="btn" data-action="login">Login</button>
+      </form>
+      <p class="register-link">Don't have an account? <a href="signup.html">Register</a></p>
+      <p id="login-message" class="message"></p>
+    </div>
   </main>
 
   <script src="app.js"></script>
