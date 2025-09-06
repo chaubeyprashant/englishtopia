@@ -5,323 +5,218 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Level Test - Englishtopia</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-    /* Sidebar (consistent with other pages) */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      margin-bottom: 30px;
-      letter-spacing: -0.5px;
-      text-align: center;
-    }
-
-    #question-box {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 30px;
-      max-width: 600px;
-      width: 100%;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #question-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
-    }
-
-    #question-box p {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #2a9d8f;
-      margin-bottom: 20px;
-    }
-
-    #question-box label {
-      display: flex;
-      align-items: center;
-      font-size: 1.1rem;
-      color: #4b5563;
-      margin: 10px 0;
-      cursor: pointer;
-    }
-
-    #question-box input[type="radio"] {
-      margin-right: 10px;
-      accent-color: #2a9d8f;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-
-    #question-box input[type="radio"]:hover {
-      transform: scale(1.1);
-    }
-
-    .button-container {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-    }
-
-    .test-button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .test-button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .test-button:disabled {
-      background: #b0bec5;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
-      #question-box {
-        padding: 20px;
-      }
-
-      #question-box p {
-        font-size: 1.1rem;
-      }
-
-      #question-box label {
-        font-size: 1rem;
-      }
-
-      .test-button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="sidebar">
+<body class="header-layout">
+  <header class="header">
     <div class="logo">Englishtopia</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
-    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
-    <a href="level-test.html" class="nav-button">♜ Test your level</a>
-    <a href="videos.html" class="nav-button">🎥 Videos</a>
-    <a href="books.html" class="nav-button">📖 Books</a>
-    <a href="profile.html" class="nav-button">⚔️ Profile</a>
-    <a href="settings.html" class="nav-button">🪶 Settings</a>
-  </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="signup.html" class="nav-link">Sign-up</a>
+    </nav>
+  </header>
+  
   <main class="container">
     <h2>Level Test</h2>
-    <div id="question-box"></div>
+    <div id="question-box" class="question-box"></div>
     <div class="button-container">
       <button class="test-button" data-action="previous" id="prev-button">Previous</button>
       <button class="test-button" data-action="next" id="next-button">Next</button>
     </div>
   </main>
+
+  <script src="app.js"></script>
   <script>
-    const questions = [
-      { text: "Choose the synonym of 'fast'", options: ["Quick", "Slow", "Late"], answer: 0 },
-      { text: "Fill the blank: She ___ to school.", options: ["go", "goes", "gone"], answer: 1 }
+    // Level Test Questions - Comprehensive English Level Assessment
+    const levelTestQuestions = [
+      {
+        text: "Choose the correct form: 'I _____ English for five years.'",
+        options: ["have been studying", "am studying", "studied", "will study"],
+        answer: 0,
+        level: "Intermediate"
+      },
+      {
+        text: "What is the past participle of 'break'?",
+        options: ["broke", "broken", "breaked", "breaking"],
+        answer: 1,
+        level: "Elementary"
+      },
+      {
+        text: "Which sentence is grammatically correct?",
+        options: [
+          "If I would have known, I would have come.",
+          "If I had known, I would have come.",
+          "If I know, I will come.",
+          "If I knew, I would come."
+        ],
+        answer: 1,
+        level: "Advanced"
+      },
+      {
+        text: "Choose the correct preposition: 'She is good _____ mathematics.'",
+        options: ["at", "in", "on", "for"],
+        answer: 0,
+        level: "Elementary"
+      },
+      {
+        text: "What does 'procrastinate' mean?",
+        options: ["To delay or postpone", "To hurry up", "To celebrate", "To organize"],
+        answer: 0,
+        level: "Advanced"
+      },
+      {
+        text: "Which is the correct passive voice: 'Someone stole my car.'",
+        options: [
+          "My car was stolen by someone.",
+          "My car is stolen by someone.",
+          "My car has been stolen by someone.",
+          "My car will be stolen by someone."
+        ],
+        answer: 0,
+        level: "Intermediate"
+      },
+      {
+        text: "Choose the correct conditional: 'If it _____ tomorrow, we will cancel the picnic.'",
+        options: ["rains", "will rain", "would rain", "is raining"],
+        answer: 0,
+        level: "Intermediate"
+      },
+      {
+        text: "What is the meaning of 'ubiquitous'?",
+        options: ["Rare", "Present everywhere", "Expensive", "Difficult"],
+        answer: 1,
+        level: "Advanced"
+      },
+      {
+        text: "Choose the correct article: 'I need _____ umbrella because it's raining.'",
+        options: ["a", "an", "the", "no article"],
+        answer: 1,
+        level: "Elementary"
+      },
+      {
+        text: "Which sentence uses the subjunctive mood correctly?",
+        options: [
+          "I suggest that he goes to the doctor.",
+          "I suggest that he go to the doctor.",
+          "I suggest that he went to the doctor.",
+          "I suggest that he will go to the doctor."
+        ],
+        answer: 1,
+        level: "Advanced"
+      }
     ];
-    let index = 0;
-    let answers = [];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let startTime = Date.now();
 
     function renderQuestion() {
-      const q = questions[index];
-      let html = `<p><b>Q${index + 1}:</b> ${q.text}</p>`;
-      q.options.forEach((opt, i) => {
-        const checked = answers[index] === i ? "checked" : "";
-        html += `<label><input type="radio" name="q${index}" value="${i}" ${checked}
-          onchange="answers[${index}] = ${i}"> ${opt}</label><br>`;
+      const question = levelTestQuestions[currentQuestionIndex];
+      let html = `
+        <div class="question-header">
+          <p><b>Question ${currentQuestionIndex + 1} of ${levelTestQuestions.length}</b></p>
+          <p><b>Level:</b> ${question.level}</p>
+        </div>
+        <p class="question-text">${question.text}</p>
+      `;
+      
+      question.options.forEach((option, i) => {
+        const checked = userAnswers[currentQuestionIndex] === i ? "checked" : "";
+        html += `
+          <label class="option-label">
+            <input type="radio" name="q${currentQuestionIndex}" value="${i}" ${checked}
+              onchange="selectAnswer(${i})">
+            <span class="option-text">${option}</span>
+          </label>
+        `;
       });
+      
       document.getElementById("question-box").innerHTML = html;
 
       // Update button states
-      document.getElementById("prev-button").disabled = index === 0;
-      document.getElementById("next-button").textContent = index === questions.length - 1 ? "Submit" : "Next";
+      document.getElementById("prev-button").disabled = currentQuestionIndex === 0;
+      document.getElementById("next-button").textContent = 
+        currentQuestionIndex === levelTestQuestions.length - 1 ? "Submit Test" : "Next Question";
+    }
+
+    function selectAnswer(answerIndex) {
+      userAnswers[currentQuestionIndex] = answerIndex;
     }
 
     function nextQuestion() {
-      if (index < questions.length - 1) {
-        index++;
+      if (currentQuestionIndex < levelTestQuestions.length - 1) {
+        currentQuestionIndex++;
         renderQuestion();
       } else {
-        localStorage.setItem("score", calculateScore());
-        window.location.href = "level-result.html";
+        submitTest();
       }
     }
 
     function previousQuestion() {
-      if (index > 0) {
-        index--;
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
         renderQuestion();
       }
     }
 
-    function calculateScore() {
-      return answers.reduce((acc, val, i) => val === questions[i].answer ? acc + 1 : acc, 0);
+    function submitTest() {
+      const endTime = Date.now();
+      const timeSpent = Math.round((endTime - startTime) / 1000); // in seconds
+      
+      const results = calculateLevelTestResults();
+      results.timeSpent = timeSpent;
+      
+      // Store results in localStorage
+      storeLevelTestResults(results);
+      
+      // Redirect to results page
+      window.location.href = "level-result.html";
     }
 
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
+    function calculateLevelTestResults() {
+      let correctAnswers = 0;
+      let levelScores = {
+        "Elementary": 0,
+        "Intermediate": 0,
+        "Advanced": 0
+      };
+      
+      levelTestQuestions.forEach((question, index) => {
+        if (userAnswers[index] === question.answer) {
+          correctAnswers++;
+          levelScores[question.level]++;
+        }
       });
+      
+      const totalQuestions = levelTestQuestions.length;
+      const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+      
+      // Determine overall level based on performance
+      let overallLevel = "Beginner";
+      if (percentage >= 80) {
+        overallLevel = "Advanced";
+      } else if (percentage >= 60) {
+        overallLevel = "Intermediate";
+      } else if (percentage >= 40) {
+        overallLevel = "Elementary";
+      }
+      
+      return {
+        totalQuestions,
+        correctAnswers,
+        percentage,
+        overallLevel,
+        levelScores,
+        answers: userAnswers
+      };
     }
-
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => alert('Quizzes clicked'));
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => alert('Profile clicked'));
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
 
     // Event handlers for test buttons
     addEventListeners('[data-action="previous"]', 'Previous button', previousQuestion);
     addEventListeners('[data-action="next"]', 'Next button', nextQuestion);
 
-    // Initial render
+    // Initialize the test
     renderQuestion();
   </script>
 </body>

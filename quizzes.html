@@ -5,275 +5,299 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quizzes - Englishtopia</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-    /* Sidebar (consistent with other pages) */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      overflow-y: auto;
-    }
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      text-align: center;
-      margin-bottom: 40px;
-      letter-spacing: -0.5px;
-    }
-
-    /* Grid for quiz cards */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #2a9d8f;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      font-size: 16px;
-      font-weight: 400;
-      color: #4b5563;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .card button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .card {
-        max-width: 350px;
-        margin: 0 auto;
-      }
-
-      .card button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="sidebar">
+<body class="header-layout">
+  <header class="header">
     <div class="logo">Englishtopia</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
-    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
-    <a href="level-test.html" class="nav-button">♜ Test your level</a>
-    <a href="videos.html" class="nav-button">🎥 Videos</a>
-    <a href="books.html" class="nav-button">📖 Books</a>
-    <a href="profile.html" class="nav-button">⚔️ Profile</a>
-    <a href="settings.html" class="nav-button">🪶 Settings</a>
-  </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="signup.html" class="nav-link">Sign-up</a>
+    </nav>
+  </header>
+  
   <main class="container">
-    <h2>Quizzes</h2>
+    <h2>Practice Quizzes</h2>
     <div class="grid">
       <div class="card">
-        <h3>Rogue</h3>
+        <h3>Grammar Basics</h3>
         <p>5 questions · 5 mins</p>
-        <button data-action="start-rogue">Start</button>
+        <p class="difficulty">Beginner Level</p>
+        <button class="btn" data-action="start-grammar">Start Quiz</button>
       </div>
       <div class="card">
-        <h3>Knight</h3>
+        <h3>Vocabulary Builder</h3>
+        <p>8 questions · 8 mins</p>
+        <p class="difficulty">Intermediate Level</p>
+        <button class="btn" data-action="start-vocabulary">Start Quiz</button>
+      </div>
+      <div class="card">
+        <h3>Advanced English</h3>
         <p>10 questions · 12 mins</p>
-        <button data-action="start-knight">Start</button>
+        <p class="difficulty">Advanced Level</p>
+        <button class="btn" data-action="start-advanced">Start Quiz</button>
       </div>
       <div class="card">
-        <h3>Honored Warrior</h3>
-        <p>15 questions · 20 mins</p>
-        <button data-action="start-honored">Start</button>
+        <h3>Business English</h3>
+        <p>7 questions · 10 mins</p>
+        <p class="difficulty">Professional Level</p>
+        <button class="btn" data-action="start-business">Start Quiz</button>
       </div>
     </div>
   </main>
+
+  <script src="app.js"></script>
   <script>
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
-      });
-    }
+    // Quiz Questions Database
+    const quizDatabase = {
+      grammar: {
+        title: "Grammar Basics",
+        questions: [
+          {
+            text: "Choose the correct article: 'I saw _____ elephant at the zoo.'",
+            options: ["a", "an", "the", "no article"],
+            answer: 1,
+            explanation: "We use 'an' before words that start with a vowel sound."
+          },
+          {
+            text: "What is the plural of 'child'?",
+            options: ["childs", "children", "childes", "childrens"],
+            answer: 1,
+            explanation: "The plural of 'child' is 'children' - an irregular plural form."
+          },
+          {
+            text: "Choose the correct verb form: 'She _____ to school every day.'",
+            options: ["go", "goes", "going", "gone"],
+            answer: 1,
+            explanation: "With third person singular (she), we add 's' to the verb."
+          },
+          {
+            text: "Which sentence is correct?",
+            options: [
+              "I am taller than him.",
+              "I am taller than he.",
+              "I am more taller than him.",
+              "I am tall than him."
+            ],
+            answer: 0,
+            explanation: "In comparisons, we use 'than' + object pronoun (him)."
+          },
+          {
+            text: "What is the past tense of 'run'?",
+            options: ["runned", "ran", "run", "running"],
+            answer: 1,
+            explanation: "The past tense of 'run' is 'ran' - an irregular verb."
+          }
+        ]
+      },
+      vocabulary: {
+        title: "Vocabulary Builder",
+        questions: [
+          {
+            text: "What does 'enormous' mean?",
+            options: ["Very small", "Very large", "Very fast", "Very slow"],
+            answer: 1,
+            explanation: "Enormous means very large in size or amount."
+          },
+          {
+            text: "Choose the correct synonym for 'happy':",
+            options: ["Sad", "Joyful", "Angry", "Tired"],
+            answer: 1,
+            explanation: "Joyful is a synonym for happy, meaning feeling great pleasure."
+          },
+          {
+            text: "What does 'frustrated' mean?",
+            options: ["Excited", "Confused", "Feeling annoyed", "Surprised"],
+            answer: 2,
+            explanation: "Frustrated means feeling annoyed or upset due to inability to change something."
+          },
+          {
+            text: "Choose the correct word: 'The weather is _____ today.'",
+            options: ["beautifully", "beautiful", "beauty", "beautify"],
+            answer: 1,
+            explanation: "We need an adjective (beautiful) to describe the weather."
+          },
+          {
+            text: "What does 'generous' mean?",
+            options: ["Selfish", "Giving freely", "Strict", "Lazy"],
+            answer: 1,
+            explanation: "Generous means showing a readiness to give more than is necessary."
+          },
+          {
+            text: "Choose the correct antonym for 'brave':",
+            options: ["Strong", "Courageous", "Fearful", "Bold"],
+            answer: 2,
+            explanation: "Fearful is the antonym of brave, meaning lacking courage."
+          },
+          {
+            text: "What does 'mysterious' mean?",
+            options: ["Clear", "Obvious", "Difficult to understand", "Simple"],
+            answer: 2,
+            explanation: "Mysterious means difficult to understand or explain."
+          },
+          {
+            text: "Choose the correct word: 'She _____ her homework yesterday.'",
+            options: ["completed", "completing", "complete", "completes"],
+            answer: 0,
+            explanation: "We need the past tense 'completed' for an action that happened yesterday."
+          }
+        ]
+      },
+      advanced: {
+        title: "Advanced English",
+        questions: [
+          {
+            text: "Which sentence uses the subjunctive mood correctly?",
+            options: [
+              "I suggest that he goes to the doctor.",
+              "I suggest that he go to the doctor.",
+              "I suggest that he went to the doctor.",
+              "I suggest that he will go to the doctor."
+            ],
+            answer: 1,
+            explanation: "The subjunctive mood uses the base form of the verb after 'suggest that'."
+          },
+          {
+            text: "What does 'ubiquitous' mean?",
+            options: ["Rare", "Present everywhere", "Expensive", "Difficult"],
+            answer: 1,
+            explanation: "Ubiquitous means present, appearing, or found everywhere."
+          },
+          {
+            text: "Choose the correct conditional: 'If I _____ you, I would accept the offer.'",
+            options: ["am", "was", "were", "will be"],
+            answer: 2,
+            explanation: "In hypothetical conditions, we use 'were' for all persons with 'if I were'."
+          },
+          {
+            text: "What does 'ephemeral' mean?",
+            options: ["Lasting forever", "Lasting for a very short time", "Very expensive", "Very large"],
+            answer: 1,
+            explanation: "Ephemeral means lasting for a very short time."
+          },
+          {
+            text: "Which sentence is grammatically correct?",
+            options: [
+              "Neither John nor Mary are coming.",
+              "Neither John nor Mary is coming.",
+              "Neither John nor Mary were coming.",
+              "Neither John nor Mary have come."
+            ],
+            answer: 1,
+            explanation: "With 'neither...nor', the verb agrees with the subject closer to it (Mary is singular)."
+          },
+          {
+            text: "What does 'serendipity' mean?",
+            options: ["Bad luck", "The occurrence of happy accidents", "Hard work", "Planning ahead"],
+            answer: 1,
+            explanation: "Serendipity is the occurrence of events by chance in a happy way."
+          },
+          {
+            text: "Choose the correct passive voice: 'They are building a new bridge.'",
+            options: [
+              "A new bridge is being built by them.",
+              "A new bridge is built by them.",
+              "A new bridge was being built by them.",
+              "A new bridge will be built by them."
+            ],
+            answer: 0,
+            explanation: "Present continuous passive: 'is being built' matches the present continuous active."
+          },
+          {
+            text: "What does 'perspicacious' mean?",
+            options: ["Confused", "Having keen insight", "Lazy", "Angry"],
+            answer: 1,
+            explanation: "Perspicacious means having a ready insight into and understanding of things."
+          },
+          {
+            text: "Which sentence uses the gerund correctly?",
+            options: [
+              "I enjoy to read books.",
+              "I enjoy reading books.",
+              "I enjoy read books.",
+              "I enjoy to reading books."
+            ],
+            answer: 1,
+            explanation: "After 'enjoy', we use the gerund (reading), not the infinitive."
+          },
+          {
+            text: "What does 'mellifluous' mean?",
+            options: ["Harsh", "Sweet or musical", "Loud", "Quiet"],
+            answer: 1,
+            explanation: "Mellifluous means having a sweet, musical, pleasant sound."
+          }
+        ]
+      },
+      business: {
+        title: "Business English",
+        questions: [
+          {
+            text: "What does 'ROI' stand for?",
+            options: ["Return on Investment", "Rate of Interest", "Revenue of Income", "Risk of Investment"],
+            answer: 0,
+            explanation: "ROI stands for Return on Investment, a performance measure."
+          },
+          {
+            text: "Choose the correct business term: 'We need to _____ our expenses.'",
+            options: ["minimize", "maximize", "optimize", "minimize"],
+            answer: 0,
+            explanation: "Minimize means to reduce to the smallest possible amount."
+          },
+          {
+            text: "What does 'synergy' mean in business?",
+            options: ["Competition", "Cooperation", "The interaction of elements that produce a greater effect", "Conflict"],
+            answer: 2,
+            explanation: "Synergy is the interaction of elements that produce a greater effect together."
+          },
+          {
+            text: "Choose the correct phrase: 'Let's _____ this proposal.'",
+            options: ["discuss about", "discuss", "discuss on", "discuss for"],
+            answer: 1,
+            explanation: "We don't use prepositions after 'discuss' - just 'discuss something'."
+          },
+          {
+            text: "What does 'leverage' mean in business?",
+            options: ["Avoid", "Use something to maximum advantage", "Ignore", "Reject"],
+            answer: 1,
+            explanation: "Leverage means to use something to maximum advantage."
+          },
+          {
+            text: "Choose the correct business email opening:",
+            options: [
+              "Hi John,",
+              "Dear Mr. Smith,",
+              "Hello there,",
+              "Both A and B are correct"
+            ],
+            answer: 3,
+            explanation: "Both 'Hi John,' (informal) and 'Dear Mr. Smith,' (formal) are appropriate depending on context."
+          },
+          {
+            text: "What does 'stakeholder' mean?",
+            options: ["A person with an interest in a business", "A wooden post", "A competitor", "A customer only"],
+            answer: 0,
+            explanation: "A stakeholder is a person with an interest or concern in a business."
+          }
+        ]
+      }
+    };
 
     // Quiz start function
-    function startQuiz(level) {
-      alert(`Starting quiz: ${level}`);
-      window.location.href = "level-test.html";
+    function startQuiz(quizType) {
+      // Store the quiz type and questions in localStorage
+      localStorage.setItem('currentQuiz', JSON.stringify(quizDatabase[quizType]));
+      localStorage.setItem('quizType', quizType);
+      
+      // Redirect to quiz page
+      window.location.href = `quiz-taking.html?type=${quizType}`;
     }
 
-    // Event handlers for navigation
-    addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'index.html');
-    addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-    addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-    addEventListeners('[data-action="videos"]', 'Videos button', () => alert('Videos clicked'));
-    addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-    addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-    addEventListeners('[data-action="settings"]', 'Settings button', () => alert('Settings clicked'));
-
     // Event handlers for quiz buttons
-    addEventListeners('[data-action="start-rogue"]', 'Rogue quiz button', () => startQuiz('rogue'));
-    addEventListeners('[data-action="start-knight"]', 'Knight quiz button', () => startQuiz('knight'));
-    addEventListeners('[data-action="start-honored"]', 'Honored Warrior quiz button', () => startQuiz('honored'));
+    addEventListeners('[data-action="start-grammar"]', 'Grammar quiz button', () => startQuiz('grammar'));
+    addEventListeners('[data-action="start-vocabulary"]', 'Vocabulary quiz button', () => startQuiz('vocabulary'));
+    addEventListeners('[data-action="start-advanced"]', 'Advanced quiz button', () => startQuiz('advanced'));
+    addEventListeners('[data-action="start-business"]', 'Business quiz button', () => startQuiz('business'));
   </script>
 </body>
 </html>
