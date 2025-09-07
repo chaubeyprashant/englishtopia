@@ -3,6 +3,36 @@
    =========================================== */
 
 /**
+ * @typedef {Object} User
+ * @property {string} username
+ * @property {string} email
+ * @property {string} password
+ */
+
+/**
+ * @typedef {Object} QuizResults
+ * @property {string} quizId
+ * @property {string} userEmail
+ * @property {number[]} answers
+ * @property {number} score
+ * @property {string} completedAt
+ */
+
+/**
+ * @typedef {Object} LevelTestResults
+ * @property {string} level
+ * @property {number} score
+ * @property {string} completedAt
+ */
+
+/**
+ * @typedef {Object} Result
+ * @property {boolean} success
+ * @property {string} [message]
+ * @property {User} [user]
+ */
+
+/**
  * Navigation Configuration
  * Defines the navigation items for the sidebar/header
  */
@@ -17,8 +47,9 @@ const navItems = [
 ];
 
 /**
- * Builds the navigation bar dynamically
- * This function creates navigation links and marks the current page as active
+ * Builds the navigation bar dynamically and marks current page as active.
+ * Safe no-op if element `#navbar` is not present on the page.
+ * @returns {void}
  */
 function buildNavbar() {
   const nav = document.getElementById("navbar");
@@ -46,27 +77,29 @@ buildNavbar();
  */
 
 /**
- * Retrieves all users from localStorage
- * @returns {Array} Array of user objects
+ * Retrieves all users from localStorage.
+ * @returns {User[]} Array of user objects
  */
 function getUsers() {
   return JSON.parse(localStorage.getItem("users") || "[]");
 }
 
 /**
- * Saves users array to localStorage
- * @param {Array} users - Array of user objects to save
+ * Saves users array to localStorage.
+ * @param {User[]} users - Array of user objects to save
+ * @returns {void}
  */
 function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
 /**
- * Registers a new user
- * @param {string} username - User's chosen username
- * @param {string} email - User's email address
- * @param {string} password - User's password
- * @returns {Object} Result object with success status and message
+ * Registers a new user after basic duplicate email check.
+ * Note: Prototype only; passwords are stored in plaintext locally.
+ * @param {string} username
+ * @param {string} email
+ * @param {string} password
+ * @returns {Result}
  */
 function signupUser(username, email, password) {
   const users = getUsers();
@@ -84,10 +117,10 @@ function signupUser(username, email, password) {
 }
 
 /**
- * Authenticates a user login
- * @param {string} email - User's email address
- * @param {string} password - User's password
- * @returns {Object} Result object with success status, user data, and message
+ * Authenticates a user login and sets session keys on success.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Result}
  */
 function loginUser(email, password) {
   const users = getUsers();
@@ -104,8 +137,8 @@ function loginUser(email, password) {
 }
 
 /**
- * Logs out the current user
- * Removes login session and user data from localStorage
+ * Logs out the current user by removing client-side session keys.
+ * @returns {void}
  */
 function logoutUser() {
   localStorage.removeItem("loggedIn");
@@ -113,8 +146,8 @@ function logoutUser() {
 }
 
 /**
- * Gets the currently logged-in user
- * @returns {Object|null} Current user object or null if not logged in
+ * Gets the currently logged-in user (if any).
+ * @returns {User|null}
  */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser") || "null");
@@ -125,11 +158,11 @@ function getCurrentUser() {
    =========================================== */
 
 /**
- * Universal Event Listener Function
- * Handles both click and touch events for better mobile support
+ * Universal event listener helper for click and touchstart.
  * @param {string} selector - CSS selector for elements to attach listeners to
  * @param {string} action - Description of the action for logging
- * @param {Function} callback - Function to execute when event is triggered
+ * @param {() => void} callback - Function to execute when event is triggered
+ * @returns {void}
  */
 function addEventListeners(selector, action, callback) {
   const elements = document.querySelectorAll(selector);
@@ -155,8 +188,9 @@ function addEventListeners(selector, action, callback) {
  */
 
 /**
- * Sets up navigation event listeners for sidebar/header navigation
- * This function should be called on each page to enable navigation
+ * Sets up navigation event listeners for sidebar/header navigation.
+ * Should be called on each page to enable navigation.
+ * @returns {void}
  */
 function setupNavigation() {
   // Home navigation
@@ -187,9 +221,9 @@ function setupNavigation() {
  */
 
 /**
- * Validates email format
- * @param {string} email - Email address to validate
- * @returns {boolean} True if email is valid, false otherwise
+ * Validates email format.
+ * @param {string} email
+ * @returns {boolean}
  */
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -197,9 +231,9 @@ function isValidEmail(email) {
 }
 
 /**
- * Validates password strength
- * @param {string} password - Password to validate
- * @returns {Object} Validation result with success status and message
+ * Validates password strength (prototype: minimum length only).
+ * @param {string} password
+ * @returns {{success: boolean, message: string}}
  */
 function validatePassword(password) {
   if (password.length < 6) {
@@ -209,10 +243,11 @@ function validatePassword(password) {
 }
 
 /**
- * Shows a message to the user
- * @param {string} message - Message to display
- * @param {string} type - Type of message ('success', 'error', 'info')
- * @param {string} elementId - ID of the element to display the message in
+ * Shows a message to the user in a target element.
+ * @param {string} message
+ * @param {('success'|'error'|'info')} [type='info']
+ * @param {string} [elementId='message']
+ * @returns {void}
  */
 function showMessage(message, type = 'info', elementId = 'message') {
   const messageElement = document.getElementById(elementId);
@@ -228,16 +263,17 @@ function showMessage(message, type = 'info', elementId = 'message') {
  */
 
 /**
- * Stores quiz results in localStorage
- * @param {Object} results - Quiz results object
+ * Stores quiz results in localStorage.
+ * @param {QuizResults} results
+ * @returns {void}
  */
 function storeQuizResults(results) {
   localStorage.setItem('quizResults', JSON.stringify(results));
 }
 
 /**
- * Retrieves quiz results from localStorage
- * @returns {Object|null} Quiz results object or null if not found
+ * Retrieves quiz results from localStorage (latest attempt).
+ * @returns {QuizResults|null}
  */
 function getQuizResults() {
   const results = localStorage.getItem('quizResults');
@@ -245,16 +281,17 @@ function getQuizResults() {
 }
 
 /**
- * Stores level test results in localStorage
- * @param {Object} results - Level test results object
+ * Stores level test results in localStorage.
+ * @param {LevelTestResults} results
+ * @returns {void}
  */
 function storeLevelTestResults(results) {
   localStorage.setItem("levelTestResults", JSON.stringify(results));
 }
 
 /**
- * Retrieves level test results from localStorage
- * @returns {Object|null} Level test results object or null if not found
+ * Retrieves level test results from localStorage (latest result).
+ * @returns {LevelTestResults|null}
  */
 function getLevelTestResults() {
   const results = localStorage.getItem("levelTestResults");
@@ -267,8 +304,9 @@ function getLevelTestResults() {
  */
 
 /**
- * Changes the font family for the entire application
- * @param {string} font - Font family to apply
+ * Changes the font family for the entire application and persists the choice.
+ * @param {string} font
+ * @returns {void}
  */
 function changeFont(font) {
   document.body.style.fontFamily = font || 'Inter, sans-serif';
@@ -277,8 +315,8 @@ function changeFont(font) {
 }
 
 /**
- * Resets all user data from localStorage
- * @returns {boolean} True if reset was successful
+ * Resets all user data from localStorage.
+ * @returns {boolean}
  */
 function resetData() {
   try {
@@ -291,8 +329,8 @@ function resetData() {
 }
 
 /**
- * Deletes user account and all associated data
- * @returns {boolean} True if deletion was successful
+ * Deletes user account and all associated data (same as reset for prototype).
+ * @returns {boolean}
  */
 function deleteAccount() {
   try {
@@ -305,8 +343,8 @@ function deleteAccount() {
 }
 
 /**
- * Initialization Function
- * Sets up the application when the DOM is loaded
+ * Initialization entrypoint. Applies preferences, wires navigation, reports session state.
+ * @returns {void}
  */
 function initializeApp() {
   // Apply saved font preference

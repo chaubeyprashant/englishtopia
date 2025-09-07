@@ -24,6 +24,9 @@
 | 18 | Performance optimization and code review | Fast loading times and efficient code | 2 hours | Week 7 | C | ✅ Completed |
 | 19 | User acceptance testing and bug fixes | All functionality working as specified | 3 hours | Week 8 | C | ✅ Completed |
 | 20 | Documentation completion and final review | Complete project documentation package | 4 hours | Week 8 | A, B, C | ✅ Completed |
+| 21 | Add JSDoc annotations and improve code comments | Better code readability and maintainability | 1 hour | Week 8 | C | ✅ Completed |
+| 22 | Create development and testing logs | Ongoing documentation of changes and tests | 1 hour | Week 8 | C | ✅ Completed |
+| 23 | Map codebase to JETS structure | JETS_Compliance.md created and linked | 30 mins | Week 8 | B | ✅ Completed |
 
 ## Task Categories by Criterion
 
