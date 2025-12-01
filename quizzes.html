@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quizzes - Englishtopia</title>
+  <title>Quizzes - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
@@ -23,38 +23,39 @@
     <h2>Practice Quizzes</h2>
     <div class="grid">
       <div class="card">
-        <h3>Grammar Basics</h3>
-        <p>5 questions · 5 mins</p>
-        <p class="difficulty">Beginner Level</p>
+        <h3>Peddler</h3>
+        <p>5 questions · 3 mins</p>
+        <p class="difficulty">Easy</p>
         <button class="btn" data-action="start-grammar">Start Quiz</button>
       </div>
       <div class="card">
-        <h3>Vocabulary Builder</h3>
-        <p>8 questions · 8 mins</p>
-        <p class="difficulty">Intermediate Level</p>
+        <h3>Rogue</h3>
+        <p>8 questions · 5 mins</p>
+        <p class="difficulty">Intermediate</p>
         <button class="btn" data-action="start-vocabulary">Start Quiz</button>
       </div>
       <div class="card">
-        <h3>Advanced English</h3>
-        <p>10 questions · 12 mins</p>
-        <p class="difficulty">Advanced Level</p>
+        <h3>Knight</h3>
+        <p>10 questions · 8 mins</p>
+        <p class="difficulty">Hard</p>
         <button class="btn" data-action="start-advanced">Start Quiz</button>
       </div>
       <div class="card">
-        <h3>Business English</h3>
-        <p>7 questions · 10 mins</p>
-        <p class="difficulty">Professional Level</p>
+        <h3>Honored Warrior</h3>
+        <p>15 questions · 10 mins</p>
+        <p class="difficulty">Insane</p>
         <button class="btn" data-action="start-business">Start Quiz</button>
       </div>
     </div>
   </main>
 
   <script src="app.js"></script>
+  <script src="quiz.js"></script>
   <script>
     // Quiz Questions Database
     const quizDatabase = {
       grammar: {
-        title: "Grammar Basics",
+        title: "Peddler",
         questions: [
           {
             text: "Choose the correct article: 'I saw _____ elephant at the zoo.'",
@@ -86,15 +87,15 @@
             explanation: "In comparisons, we use 'than' + object pronoun (him)."
           },
           {
-            text: "What is the past tense of 'run'?",
-            options: ["runned", "ran", "run", "running"],
-            answer: 1,
-            explanation: "The past tense of 'run' is 'ran' - an irregular verb."
+            text: "What is the past tense of 'eat'?",
+            options: ["eated", "eating", "ate", "ated"],
+            answer: 2,
+            explanation: "The past tense of 'eat' is 'ate' - an irregular verb."
           }
         ]
       },
       vocabulary: {
-        title: "Vocabulary Builder",
+        title: "Rogue",
         questions: [
           {
             text: "What does 'enormous' mean?",
@@ -103,40 +104,40 @@
             explanation: "Enormous means very large in size or amount."
           },
           {
-            text: "Choose the correct synonym for 'happy':",
-            options: ["Sad", "Joyful", "Angry", "Tired"],
-            answer: 1,
-            explanation: "Joyful is a synonym for happy, meaning feeling great pleasure."
+            text: "Choose the correct meaning of 'annual':",
+            options: ["Often", "Long", "Routine", "Every year"],
+            answer: 3,
+            explanation: "Annual means yearly or occurring every year. So if something is annual, it happens every year."
           },
           {
             text: "What does 'frustrated' mean?",
             options: ["Excited", "Confused", "Feeling annoyed", "Surprised"],
             answer: 2,
-            explanation: "Frustrated means feeling annoyed or upset due to inability to change something."
+            explanation: "Frustrated means feeling annoyed or irritated"
           },
           {
-            text: "Choose the correct word: 'The weather is _____ today.'",
-            options: ["beautifully", "beautiful", "beauty", "beautify"],
-            answer: 1,
-            explanation: "We need an adjective (beautiful) to describe the weather."
+            text: "Choose the correct word: 'The stronghold is _____ away.'",
+            options: ["neary", "long", "far", "enourmous"],
+            answer: 2,
+            explanation: "'far' is the correct word for a long distance."
           },
           {
             text: "What does 'generous' mean?",
-            options: ["Selfish", "Giving freely", "Strict", "Lazy"],
+            options: ["Self-centred", "Giving freely", "Strict", "Kind"],
             answer: 1,
-            explanation: "Generous means showing a readiness to give more than is necessary."
+            explanation: "Generous means showing a readiness to give to others out of kindness."
           },
           {
             text: "Choose the correct antonym for 'brave':",
-            options: ["Strong", "Courageous", "Fearful", "Bold"],
-            answer: 2,
+            options: ["Strong", "Courageous", "Fearful", "Boldly Spoken"],
+            answer: 1,
             explanation: "Fearful is the antonym of brave, meaning lacking courage."
           },
           {
             text: "What does 'mysterious' mean?",
-            options: ["Clear", "Obvious", "Difficult to understand", "Simple"],
+            options: ["Clear", "Obvious", "Unknown or hidden", "Simple"],
             answer: 2,
-            explanation: "Mysterious means difficult to understand or explain."
+            explanation: "Mysterious means unknown or hidden."
           },
           {
             text: "Choose the correct word: 'She _____ her homework yesterday.'",
@@ -147,7 +148,7 @@
         ]
       },
       advanced: {
-        title: "Advanced English",
+        title: "Knight",
         questions: [
           {
             text: "Which sentence uses the subjunctive mood correctly?",
@@ -232,7 +233,7 @@
         ]
       },
       business: {
-        title: "Business English",
+        title: "Honored Warrior",
         questions: [
           {
             text: "What does 'ROI' stand for?",
@@ -241,39 +242,40 @@
             explanation: "ROI stands for Return on Investment, a performance measure."
           },
           {
-            text: "Choose the correct business term: 'We need to _____ our expenses.'",
+            text: "Choose the correct term: 'We need to _____ our expenses.'",
             options: ["minimize", "maximize", "optimize", "minimize"],
             answer: 0,
             explanation: "Minimize means to reduce to the smallest possible amount."
           },
           {
-            text: "What does 'synergy' mean in business?",
+            text: "What does 'synergy' mean?",
             options: ["Competition", "Cooperation", "The interaction of elements that produce a greater effect", "Conflict"],
             answer: 2,
             explanation: "Synergy is the interaction of elements that produce a greater effect together."
           },
           {
-            text: "Choose the correct phrase: 'Let's _____ this proposal.'",
-            options: ["discuss about", "discuss", "discuss on", "discuss for"],
+            text: "Choose the correct phrase: 'Let's _____ this effect.'",
+            options: ["improve", "exacerbate", "biggen", "anteriolate"],
             answer: 1,
-            explanation: "We don't use prepositions after 'discuss' - just 'discuss something'."
+            explanation: "'Exacerbate' means to boost on increase something."
           },
           {
-            text: "What does 'leverage' mean in business?",
-            options: ["Avoid", "Use something to maximum advantage", "Ignore", "Reject"],
+            text: "What does 'leverage' mean?",
+            options: ["Avoid", "Use something to your advantage", "Ignore", "Reject"],
             answer: 1,
-            explanation: "Leverage means to use something to maximum advantage."
+            explanation: "Leverage means to use something to your advantage."
           },
           {
-            text: "Choose the correct business email opening:",
+            text: "Choose the correct email opening:",
             options: [
               "Hi John,",
               "Dear Mr. Smith,",
               "Hello there,",
-              "Both A and B are correct"
+              "To whom it may concern,",
+              "Both A, B and C are correct"
             ],
-            answer: 3,
-            explanation: "Both 'Hi John,' (informal) and 'Dear Mr. Smith,' (formal) are appropriate depending on context."
+            answer: 4,
+            explanation: "'Hi John,' (informal) and 'Dear Mr. Smith,' (formal) as well as 'To whom it may concern,' (Client Formal) are appropriate depending on context."
           },
           {
             text: "What does 'stakeholder' mean?",

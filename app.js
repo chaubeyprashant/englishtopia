@@ -1,5 +1,5 @@
 /* ===========================================
-   ENGLISHPTOPIA - MAIN JAVASCRIPT FILE
+   UNOLINGO - MAIN JAVASCRIPT FILE
    =========================================== */
 
 /**
