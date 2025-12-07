@@ -16,6 +16,7 @@
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
@@ -37,6 +38,13 @@
   </main>
 
   <script src="app.js"></script>
+  <script>
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
   <script>
     // Settings page specific functionality
     function handleResetData() {

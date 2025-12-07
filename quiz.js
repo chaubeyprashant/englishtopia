@@ -161,7 +161,7 @@ function showResults(results) {
 
       <div class="button-container" style="margin-top: 30px;">
         <button class="test-button" onclick="window.location.href='quizzes.html'">Back to Quizzes</button>
-        <button class="test-button" onclick="window.location.href='index.html'">Home</button>
+        <button class="test-button" onclick="window.location.href='homepage.html'">Home</button>
       </div>
     </div>
   `;

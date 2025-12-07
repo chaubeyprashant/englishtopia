@@ -15,6 +15,7 @@
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
@@ -26,18 +27,26 @@
 
   <script src="app.js"></script>
   <script>
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
+  <script>
     // Profile page specific functionality
     const loggedIn = localStorage.getItem("loggedIn");
     const box = document.getElementById("profile-box");
 
     if (loggedIn) {
       const currentUser = getCurrentUser();
+      const userLevel = localStorage.getItem("userLevel") || "Not tested yet";
       box.innerHTML = `
         <h2>Your Profile</h2>
         <p><b>Name:</b> ${currentUser ? currentUser.username : 'Demo User'}</p>
         <p><b>Email:</b> ${currentUser ? currentUser.email : 'demo@example.com'}</p>
         <p><b>Joined:</b> 1 Jan 2025</p>
-        <p><b>Level:</b> B1</p>
+        <p><b>Level:</b> ${userLevel}</p>
         <button class="btn" data-action="logout">Logout</button>
       `;
     } else {

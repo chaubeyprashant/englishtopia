@@ -10,12 +10,15 @@
     /* Book card thumbnail styling */
     .card img {
       width: 100%;
-      height: 200px;
-      object-fit: cover;
+      height: 250px;
+      object-fit: contain;
+      object-position: center;
       border-radius: 6px;
       margin-bottom: 10px;
       cursor: pointer;
       transition: transform 0.2s;
+      background: #f9fafb;
+      padding: 10px;
     }
 
     .card img:hover {
@@ -62,6 +65,51 @@
       color: #333;
       cursor: pointer;
     }
+
+    /* Loader styling */
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 10;
+      border-radius: 8px;
+    }
+
+    .loader.hidden {
+      display: none;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #2a9d8f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      margin-top: 15px;
+      color: #2a9d8f;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .modal-content {
+      position: relative;
+    }
   </style>
 </head>
 <body class="sidebar-layout">
@@ -72,6 +120,7 @@
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
@@ -80,28 +129,40 @@
     <h2>Books</h2>
     <div class="grid">
       <div class="card">
-        <img src="thumbnails/beginners-english.jpg" alt="Beginner's English" data-book="https://standardebooks.org/ebooks/a-a-milne/winnie-the-pooh/text/single-page">
-        <h3>Beginner's English</h3>
-        <p>A short introduction to basic English vocabulary and grammar.</p>
-        <button class="btn" data-book="https://standardebooks.org/ebooks/a-a-milne/winnie-the-pooh/text/single-page">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Alice%27s+Adventures" alt="Beginner's English" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>Alice's Adventures in Wonderland</h3>
+        <p>Beginner-friendly classic story to improve your reading skills.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="thumbnails/intermediate-stories.jpg" alt="Intermediate Stories" data-book="https://standardebooks.org/ebooks/agatha-christie/the-mystery-of-the-blue-train/text/single-page">
-        <h3>Intermediate Stories</h3>
-        <p>Engaging narratives to improve your reading comprehension.</p>
-        <button class="btn" data-book="https://standardebooks.org/ebooks/agatha-christie/the-mystery-of-the-blue-train/text/single-page">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Frankenstein" alt="Intermediate Stories" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Frankenstein</h3>
+        <p>Engaging classic novel to improve your reading comprehension.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="thumbnails/advanced-literature.jpg" alt="Advanced Literature" data-book="https://standardebooks.org/ebooks/oscar-wilde/the-importance-of-being-earnest/text/single-page">
-        <h3>Advanced Literature</h3>
-        <p>Classic texts to enhance your reading and analytical skills.</p>
-        <button class="btn" data-book="https://standardebooks.org/ebooks/oscar-wilde/the-importance-of-being-earnest/text/single-page">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Pride+and+Prejudice" alt="Advanced Literature" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>Pride and Prejudice</h3>
+        <p>Classic literature to enhance your reading and analytical skills.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="thumbnails/english-exercises.jpg" alt="Deep Reader" data-book="https://pressbooks.library.torontomu.ca/doctormoreau/">
-        <h3>Deep Reader</h3>
-        <p>Advanced Literature to master formal and conversational english.</p>
-        <button class="btn" data-book="https://pressbooks.library.torontomu.ca/doctormoreau/">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Moby+Dick" alt="Deep Reader" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Moby Dick</h3>
+        <p>Advanced literature to master formal and conversational English.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm">Start reading</button>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=The+Great+Gatsby" alt="The Great Gatsby" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>The Great Gatsby</h3>
+        <p>American classic for intermediate to advanced readers.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm">Start reading</button>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Sherlock+Holmes" alt="Sherlock Holmes" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Adventures of Sherlock Holmes</h3>
+        <p>Mystery stories to improve your reading and vocabulary.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm">Start reading</button>
       </div>
     </div>
   </main>
@@ -110,6 +171,10 @@
   <div class="modal" id="bookModal">
     <div class="modal-content">
       <span class="close" id="closeBookModal">&times;</span>
+      <div class="loader" id="bookLoader">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading book...</div>
+      </div>
       <iframe id="bookFrame" src=""></iframe>
     </div>
   </div>
@@ -119,29 +184,63 @@
     const bookModal = document.getElementById('bookModal');
     const bookFrame = document.getElementById('bookFrame');
     const closeBookModal = document.getElementById('closeBookModal');
+    const bookLoader = document.getElementById('bookLoader');
 
     // Open modal when either thumbnail or button is clicked
     document.querySelectorAll('[data-book]').forEach(el => {
       el.addEventListener('click', () => {
         const bookURL = el.getAttribute('data-book');
+        
+        // Show loader
+        if (bookLoader) {
+          bookLoader.classList.remove('hidden');
+        }
+        
         bookFrame.src = bookURL;
         bookModal.style.display = 'flex';
       });
     });
 
-    // Close modal
-    closeBookModal.addEventListener('click', () => {
+    // Hide loader when book iframe loads
+    bookFrame.addEventListener('load', () => {
+      if (bookLoader) {
+        bookLoader.classList.add('hidden');
+      }
+    });
+
+    // Handle iframe load errors
+    bookFrame.addEventListener('error', () => {
+      console.error('Book iframe failed to load');
+      if (bookLoader) {
+        bookLoader.classList.add('hidden');
+      }
+    });
+
+    // Close modal function
+    function closeBookModalFunc() {
       bookModal.style.display = 'none';
       bookFrame.src = '';
-    });
+      // Show loader again for next book
+      if (bookLoader) {
+        bookLoader.classList.remove('hidden');
+      }
+    }
+
+    // Close modal
+    closeBookModal.addEventListener('click', closeBookModalFunc);
 
     // Close modal on outside click
     window.addEventListener('click', (e) => {
       if (e.target === bookModal) {
-        bookModal.style.display = 'none';
-        bookFrame.src = '';
+        closeBookModalFunc();
       }
     });
+    
+    // Update home link
+    const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+    if (homeLink) {
+      homeLink.href = getHomeUrl();
+    }
   </script>
 </body>
 </html>

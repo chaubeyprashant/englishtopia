@@ -42,6 +42,7 @@ const navItems = [
   { href: "level-test.html", label: "Test" },
   { href: "videos.html", label: "Videos" },
   { href: "books.html", label: "Books" },
+  { href: "translator.html", label: "Translator" },
   { href: "profile.html", label: "Profile" },
   { href: "settings.html", label: "Settings" }
 ];
@@ -151,6 +152,14 @@ function logoutUser() {
  */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser") || "null");
+}
+
+/**
+ * Gets the home page URL (always returns homepage.html).
+ * @returns {string} URL to homepage.html
+ */
+function getHomeUrl() {
+  return "homepage.html";
 }
 
 /* ===========================================
@@ -299,6 +308,87 @@ function getLevelTestResults() {
 }
 
 /**
+ * Level hierarchy for progress tracking
+ * @type {string[]}
+ */
+const LEVEL_HIERARCHY = ["Beginner", "Elementary", "Intermediate", "Advanced"];
+
+/**
+ * Updates the highest level achieved if the new level is higher.
+ * @param {string} newLevel - The level achieved (Beginner, Elementary, Intermediate, Advanced)
+ * @returns {void}
+ */
+function updateHighestLevel(newLevel) {
+  if (!newLevel) return;
+  
+  // Get current highest level, initializing if needed
+  let currentHighest = localStorage.getItem("highestLevel");
+  if (!currentHighest) {
+    currentHighest = getHighestLevel(); // This will initialize from userLevel if available
+  }
+  
+  const currentIndex = LEVEL_HIERARCHY.indexOf(currentHighest);
+  const newIndex = LEVEL_HIERARCHY.indexOf(newLevel);
+  
+  // Only update if new level is higher than current highest
+  if (newIndex > currentIndex) {
+    localStorage.setItem("highestLevel", newLevel);
+    console.log('Highest level updated to:', newLevel);
+  }
+}
+
+/**
+ * Gets the highest level achieved by the user.
+ * @returns {string} The highest level achieved
+ */
+function getHighestLevel() {
+  let highestLevel = localStorage.getItem("highestLevel");
+  
+  // If no highestLevel is set, try to initialize from userLevel
+  if (!highestLevel) {
+    const userLevel = localStorage.getItem("userLevel");
+    if (userLevel && userLevel !== "Not tested yet") {
+      // Map userLevel to standard level format if needed
+      const levelMap = {
+        "A1": "Beginner",
+        "A2": "Elementary",
+        "B1": "Elementary",
+        "B": "Intermediate",
+        "B+": "Intermediate",
+        "C1": "Intermediate",
+        "A": "Advanced"
+      };
+      
+      const mappedLevel = levelMap[userLevel] || userLevel;
+      
+      // Check if it's a valid level
+      if (LEVEL_HIERARCHY.includes(mappedLevel)) {
+        highestLevel = mappedLevel;
+        localStorage.setItem("highestLevel", highestLevel);
+      } else {
+        highestLevel = "Beginner";
+      }
+    } else {
+      highestLevel = "Beginner";
+    }
+  }
+  
+  return highestLevel;
+}
+
+/**
+ * Calculates progress percentage based on level.
+ * @param {string} level - The level (Beginner, Elementary, Intermediate, Advanced)
+ * @returns {number} Progress percentage (0-100)
+ */
+function getLevelProgress(level) {
+  const index = LEVEL_HIERARCHY.indexOf(level);
+  if (index === -1) return 0;
+  // Beginner = 0%, Elementary = 33%, Intermediate = 67%, Advanced = 100%
+  return Math.round((index / (LEVEL_HIERARCHY.length - 1)) * 100);
+}
+
+/**
  * Settings Management Functions
  * These functions handle user preferences and settings
  */
@@ -369,4 +459,37 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
   initializeApp();
+}
+
+/**
+ * Updates all home links on the page to use the correct URL based on login status.
+ * Should be called after DOM is loaded.
+ * @returns {void}
+ */
+function updateHomeLinks() {
+  const homeLinks = document.querySelectorAll('a[href*="index.html"], a[href*="homepage.html"], .nav-button[href*="index"], .nav-button[href*="homepage"]');
+  const homeUrl = getHomeUrl();
+  
+  homeLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && (href.includes('index.html') || href.includes('homepage.html'))) {
+      link.setAttribute('href', homeUrl);
+    }
+  });
+  
+  // Also update onclick handlers
+  const homeButtons = document.querySelectorAll('button[onclick*="index.html"], button[onclick*="homepage.html"]');
+  homeButtons.forEach(btn => {
+    const onclick = btn.getAttribute('onclick');
+    if (onclick) {
+      btn.setAttribute('onclick', onclick.replace(/['"]index\.html['"]|['"]homepage\.html['"]/g, `'${homeUrl}'`));
+    }
+  });
+}
+
+// Update home links when app initializes
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateHomeLinks);
+} else {
+  updateHomeLinks();
 }

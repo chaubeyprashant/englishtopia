@@ -15,6 +15,7 @@
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
@@ -50,7 +51,13 @@
   </main>
 
   <script src="app.js"></script>
-  <script src="quiz.js"></script>
+  <script>
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
   <script>
     // Quiz Questions Database
     const quizDatabase = {
@@ -289,12 +296,64 @@
 
     // Quiz start function
     function startQuiz(quizType) {
-      // Store the quiz type and questions in localStorage
-      localStorage.setItem('currentQuiz', JSON.stringify(quizDatabase[quizType]));
-      localStorage.setItem('quizType', quizType);
-      
-      // Redirect to quiz page
-      window.location.href = `quiz-taking.html?type=${quizType}`;
+      try {
+        // Validate quiz type exists
+        if (!quizDatabase || !quizDatabase[quizType]) {
+          alert(`Quiz type "${quizType}" not found. Please try again.`);
+          console.error('Quiz type not found:', quizType, 'Available types:', Object.keys(quizDatabase || {}));
+          return;
+        }
+
+        const quizData = quizDatabase[quizType];
+        
+        // Validate quiz data structure
+        if (!quizData || !quizData.questions || !Array.isArray(quizData.questions) || quizData.questions.length === 0) {
+          alert('Invalid quiz data. Please try again.');
+          console.error('Invalid quiz data for type:', quizType, quizData);
+          return;
+        }
+
+        // Store the quiz type and questions in localStorage
+        const quizDataString = JSON.stringify(quizData);
+        console.log('Storing quiz data for type:', quizType, 'Data length:', quizDataString.length);
+        
+        localStorage.setItem('currentQuiz', quizDataString);
+        localStorage.setItem('quizType', quizType);
+        
+        // Verify data was stored immediately (localStorage is synchronous)
+        const storedData = localStorage.getItem('currentQuiz');
+        if (!storedData) {
+          console.error('Quiz data was not stored in localStorage');
+          alert('Failed to store quiz data. Please check your browser settings.');
+          return;
+        }
+        
+        // Verify the stored data can be parsed
+        try {
+          const parsed = JSON.parse(storedData);
+          if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) {
+            console.error('Stored quiz data is invalid:', parsed);
+            alert('Invalid quiz data stored. Please try again.');
+            localStorage.removeItem('currentQuiz');
+            localStorage.removeItem('quizType');
+            return;
+          }
+          console.log('Quiz data stored successfully. Questions:', parsed.questions.length);
+        } catch (parseError) {
+          console.error('Failed to parse stored quiz data:', parseError);
+          alert('Stored quiz data is corrupted. Please try again.');
+          localStorage.removeItem('currentQuiz');
+          localStorage.removeItem('quizType');
+          return;
+        }
+        
+        // Redirect to quiz page
+        console.log('Redirecting to quiz-taking.html');
+        window.location.href = `quiz-taking.html?type=${quizType}`;
+      } catch (error) {
+        console.error('Error starting quiz:', error);
+        alert('An error occurred while starting the quiz. Please try again.');
+      }
     }
 
     // Event handlers for quiz buttons

@@ -15,6 +15,7 @@
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
@@ -26,12 +27,27 @@
 
   <script src="app.js"></script>
   <script>
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
+  <script>
     // Level result page specific functionality
     function displayResults() {
       const results = getLevelTestResults();
       const box = document.getElementById("result-box");
       
-      if (results) {
+      if (results && results.totalQuestions) {
+        // Store user level for profile
+        localStorage.setItem("userLevel", results.overallLevel || "Not tested yet");
+        
+        // Update highest level achieved
+        if (results.overallLevel) {
+          updateHighestLevel(results.overallLevel);
+        }
+        
         box.innerHTML = `
           <h2>Congratulations Traveler!</h2>
           <p>You scored ${results.correctAnswers} / ${results.totalQuestions}</p>
@@ -42,15 +58,34 @@
         `;
       } else {
         // Fallback for old format
-        const score = localStorage.getItem("score") || 0;
-        const total = 2;
+        const score = parseInt(localStorage.getItem("score")) || 0;
+        const total = parseInt(localStorage.getItem("totalQuestions")) || 10;
+        const pct = total > 0 ? (score / total) * 100 : 0;
+        
         let grade = "A2";
-        const pct = (score / total) * 100;
         if (pct >= 90) grade = "A";
         else if (pct >= 80) grade = "B+";
         else if (pct >= 70) grade = "B";
         else if (pct >= 60) grade = "C1";
         else if (pct >= 50) grade = "B1";
+        else if (pct >= 40) grade = "A2";
+        else grade = "A1";
+        
+        // Store user level for profile
+        localStorage.setItem("userLevel", grade);
+        
+        // Map old grade format to new level format for progress tracking
+        const levelMap = {
+          "A1": "Beginner",
+          "A2": "Elementary",
+          "B1": "Elementary",
+          "B": "Intermediate",
+          "B+": "Intermediate",
+          "C1": "Intermediate",
+          "A": "Advanced"
+        };
+        const mappedLevel = levelMap[grade] || "Beginner";
+        updateHighestLevel(mappedLevel);
 
         box.innerHTML = `
           <h2>Congratulations Traveler!</h2>
@@ -63,7 +98,7 @@
     }
 
     // Event handlers for result buttons
-    addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'index.html');
+    addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'homepage.html');
     addEventListeners('[data-action="retake"]', 'Retake button', () => window.location.href = 'level-test.html');
 
     // Display results when page loads
