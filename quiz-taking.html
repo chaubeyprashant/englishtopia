@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz - Unolingo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="sidebar-layout">
+  <div class="sidebar">
+    <div class="logo">Unolingo</div>
+    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
+    <a href="level-test.html" class="nav-button">♜ Test your level</a>
+    <a href="videos.html" class="nav-button">🎥 Videos</a>
+    <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
+    <a href="profile.html" class="nav-button">⚔️ Profile</a>
+    <a href="settings.html" class="nav-button">🪶 Settings</a>
+  </div>
+  
+  <main class="container">
+    <div class="quiz-header">
+      <h2 id="quiz-title">Quiz</h2>
+      <div class="quiz-info" id="quiz-info">Loading...</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+    
+    <div id="question-box" class="question-box"></div>
+    <div class="button-container">
+      <button class="test-button" data-action="previous" id="prev-button">Previous</button>
+      <button class="test-button" data-action="next" id="next-button">Next</button>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
+  <script>
+    let currentQuiz = null;
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let startTime = Date.now();
+
+    // Initialize quiz
+    function initializeQuiz() {
+      try {
+        // Try to get quiz data from localStorage
+        let quizData = localStorage.getItem('currentQuiz');
+        
+        // If no data in localStorage, try to get from URL parameter
+        if (!quizData) {
+          const urlParams = new URLSearchParams(window.location.search);
+          const quizType = urlParams.get('type');
+          
+          if (quizType) {
+            // Try to redirect back to quizzes page to get the data
+            console.log('No quiz data found, but quiz type in URL:', quizType);
+            alert('Quiz data not found. Please select a quiz again.');
+            window.location.href = 'quizzes.html';
+            return;
+          }
+          
+          alert('No quiz data found. Redirecting to quizzes page.');
+          window.location.href = 'quizzes.html';
+          return;
+        }
+
+        currentQuiz = JSON.parse(quizData);
+        
+        // Validate quiz data
+        if (!currentQuiz || !currentQuiz.questions || !Array.isArray(currentQuiz.questions) || currentQuiz.questions.length === 0) {
+          console.error('Invalid quiz data structure:', currentQuiz);
+          alert('Invalid quiz data. Redirecting to quizzes page.');
+          localStorage.removeItem('currentQuiz');
+          localStorage.removeItem('quizType');
+          window.location.href = 'quizzes.html';
+          return;
+        }
+        
+        userAnswers = new Array(currentQuiz.questions.length).fill(null);
+        
+        const titleEl = document.getElementById('quiz-title');
+        const infoEl = document.getElementById('quiz-info');
+        
+        if (titleEl) titleEl.textContent = currentQuiz.title || 'Quiz';
+        if (infoEl) infoEl.textContent = `${currentQuiz.questions.length} questions • Practice Quiz`;
+        
+        renderQuestion();
+      } catch (error) {
+        console.error('Error initializing quiz:', error);
+        alert('Error loading quiz: ' + error.message + '. Redirecting to quizzes page.');
+        localStorage.removeItem('currentQuiz');
+        localStorage.removeItem('quizType');
+        window.location.href = 'quizzes.html';
+      }
+    }
+
+    function renderQuestion() {
+      if (!currentQuiz || !currentQuiz.questions || currentQuestionIndex < 0 || currentQuestionIndex >= currentQuiz.questions.length) {
+        console.error('Invalid question index or quiz data');
+        return;
+      }
+      
+      const question = currentQuiz.questions[currentQuestionIndex];
+      if (!question || !question.text || !question.options || !Array.isArray(question.options)) {
+        console.error('Invalid question data');
+        return;
+      }
+      
+      const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+      
+      const progressFill = document.getElementById('progress-fill');
+      if (progressFill) progressFill.style.width = `${progress}%`;
+      
+      let html = `
+        <div class="question-header">
+          <p><b>Question ${currentQuestionIndex + 1} of ${currentQuiz.questions.length}</b></p>
+        </div>
+        <p class="question-text">${question.text}</p>
+      `;
+      
+      question.options.forEach((option, i) => {
+        const checked = userAnswers[currentQuestionIndex] === i ? "checked" : "";
+        html += `
+          <label class="option-label">
+            <input type="radio" name="q${currentQuestionIndex}" value="${i}" ${checked}
+              onchange="selectAnswer(parseInt(this.value))">
+            <span class="option-text">${option}</span>
+          </label>
+        `;
+      });
+      
+      const questionBox = document.getElementById("question-box");
+      if (questionBox) questionBox.innerHTML = html;
+
+      // Update button states
+      const prevBtn = document.getElementById("prev-button");
+      const nextBtn = document.getElementById("next-button");
+      if (prevBtn) prevBtn.disabled = currentQuestionIndex === 0;
+      if (nextBtn) {
+        nextBtn.textContent = currentQuestionIndex === currentQuiz.questions.length - 1 ? "Submit Quiz" : "Next Question";
+      }
+    }
+
+    function selectAnswer(answerIndex) {
+      userAnswers[currentQuestionIndex] = answerIndex;
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const endTime = Date.now();
+      const timeSpent = Math.round((endTime - startTime) / 1000);
+      
+      const results = calculateQuizResults();
+      results.timeSpent = timeSpent;
+      results.quizType = localStorage.getItem('quizType');
+      
+      // Store results using the centralized function
+      storeQuizResults(results);
+      
+      // Show results
+      showResults(results);
+    }
+
+    function calculateQuizResults() {
+      let correctAnswers = 0;
+      const questionResults = [];
+      
+      currentQuiz.questions.forEach((question, index) => {
+        const isCorrect = userAnswers[index] === question.answer;
+        if (isCorrect) correctAnswers++;
+        
+        questionResults.push({
+          question: question.text,
+          userAnswer: userAnswers[index],
+          correctAnswer: question.answer,
+          isCorrect: isCorrect,
+          explanation: question.explanation,
+          options: question.options
+        });
+      });
+      
+      const totalQuestions = currentQuiz.questions.length;
+      const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+      
+      return {
+        totalQuestions,
+        correctAnswers,
+        percentage,
+        questionResults,
+        answers: userAnswers
+      };
+    }
+
+    function showResults(results) {
+      const container = document.querySelector('.container');
+      container.innerHTML = `
+        <div class="results-container">
+          <h2>Quiz Results</h2>
+          <div class="score-display">${results.percentage}%</div>
+          <div class="score-details">
+            <p><strong>Correct Answers:</strong> ${results.correctAnswers}/${results.totalQuestions}</p>
+            <p><strong>Time Spent:</strong> ${Math.floor(results.timeSpent / 60)}:${(results.timeSpent % 60).toString().padStart(2, '0')}</p>
+            <p><strong>Quiz Type:</strong> ${results.quizType}</p>
+          </div>
+          
+          <h3 style="margin-bottom: 20px; color: #2a9d8f;">Question Review</h3>
+          ${results.questionResults.map((result, index) => `
+            <div class="explanation">
+              <p><strong>Question ${index + 1}:</strong> ${result.question}</p>
+              <p><strong>Your Answer:</strong> ${result.options[result.userAnswer] || 'Not answered'}</p>
+              <p><strong>Correct Answer:</strong> ${result.options[result.correctAnswer]}</p>
+              <p><strong>Explanation:</strong> ${result.explanation}</p>
+              <p style="color: ${result.isCorrect ? '#10b981' : '#ef4444'}; font-weight: 600;">
+                ${result.isCorrect ? '✓ Correct' : '✗ Incorrect'}
+              </p>
+            </div>
+          `).join('')}
+          
+          <div class="button-container" style="margin-top: 30px;">
+            <button class="test-button" onclick="window.location.href='quizzes.html'">Back to Quizzes</button>
+            <button class="test-button" onclick="window.location.href='homepage.html'">Home</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Event handlers for quiz buttons
+    addEventListeners('[data-action="previous"]', 'Previous button', previousQuestion);
+    addEventListeners('[data-action="next"]', 'Next button', nextQuestion);
+
+    // Initialize the quiz when page loads
+    document.addEventListener('DOMContentLoaded', initializeQuiz);
+  </script>
+
+<div id="quiz-container">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <button id="next-btn">Next</button>
+</div>
+</body>
+</html>
+

@@ -3,257 +3,244 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Books - Englishtopia</title>
+  <title>Books - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* Book card thumbnail styling */
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      background: #f9fafb;
+      padding: 10px;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
+    .card img:hover {
+      transform: scale(1.05);
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      position: relative;
+      background-color: #fff;
+      padding: 1rem;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 8px;
+    }
+
+    .modal-content iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Loader styling */
+    .loader {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      text-align: left;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 10;
+      border-radius: 8px;
     }
 
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    .loader.hidden {
+      display: none;
     }
 
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      overflow-y: auto;
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #2a9d8f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      margin-top: 15px;
       color: #2a9d8f;
-      text-align: center;
-      margin-bottom: 40px;
-      letter-spacing: -0.5px;
-    }
-
-    /* Grid for book cards */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #2a9d8f;
-      margin-bottom: 10px;
-    }
-
-    .card p {
+      font-weight: 500;
       font-size: 16px;
-      font-weight: 400;
-      color: #4b5563;
-      margin-bottom: 20px;
-      line-height: 1.5;
     }
 
-    .card button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .card {
-        max-width: 350px;
-        margin: 0 auto;
-      }
+    .modal-content {
+      position: relative;
     }
   </style>
 </head>
-<body>
+<body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
+
   <main class="container">
     <h2>Books</h2>
     <div class="grid">
       <div class="card">
-        <h3>Beginner’s English</h3>
-        <p>A short introduction to basic English vocabulary and grammar.</p>
-        <button data-action="read-book1">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Alice%27s+Adventures" alt="Beginner's English" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>Alice's Adventures in Wonderland</h3>
+        <p>Beginner-friendly classic story to improve your reading skills.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <h3>Intermediate Stories</h3>
-        <p>Engaging narratives to improve your reading comprehension.</p>
-        <button data-action="read-book2">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Frankenstein" alt="Intermediate Stories" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Frankenstein</h3>
+        <p>Engaging classic novel to improve your reading comprehension.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <h3>Advanced Literature</h3>
-        <p>Classic texts to enhance your reading and analytical skills.</p>
-        <button data-action="read-book3">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Pride+and+Prejudice" alt="Advanced Literature" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>Pride and Prejudice</h3>
+        <p>Classic literature to enhance your reading and analytical skills.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <h3>English Exercises</h3>
-        <p>Advanced exercises for mastering complex English concepts.</p>
-        <button data-action="read-book4">Start reading</button>
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Moby+Dick" alt="Deep Reader" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Moby Dick</h3>
+        <p>Advanced literature to master formal and conversational English.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm">Start reading</button>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=The+Great+Gatsby" alt="The Great Gatsby" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <h3>The Great Gatsby</h3>
+        <p>American classic for intermediate to advanced readers.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm">Start reading</button>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Sherlock+Holmes" alt="Sherlock Holmes" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <h3>Adventures of Sherlock Holmes</h3>
+        <p>Mystery stories to improve your reading and vocabulary.</p>
+        <button class="btn" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm">Start reading</button>
       </div>
     </div>
   </main>
+
+  <!-- Modal -->
+  <div class="modal" id="bookModal">
+    <div class="modal-content">
+      <span class="close" id="closeBookModal">&times;</span>
+      <div class="loader" id="bookLoader">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading book...</div>
+      </div>
+      <iframe id="bookFrame" src=""></iframe>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
   <script>
-    const bookLinks = {
-      "read-book1": "https://elt.oup.com/student/bookworms/?cc=global&selLanguage=en",
-      "read-book2": "https://eslpdfs.com/short-stories/",
-      "read-book3": "https://www.gutenberg.org/ebooks/1342",
-      "read-book4": "https://learnenglish.britishcouncil.org/grammar"
-    };
-  
-    document.querySelectorAll("button[data-action]").forEach(button => {
-      button.addEventListener("click", () => {
-        const action = button.getAttribute("data-action");
-        if (bookLinks[action]) {
-          window.open(bookLinks[action], "_blank");
+    const bookModal = document.getElementById('bookModal');
+    const bookFrame = document.getElementById('bookFrame');
+    const closeBookModal = document.getElementById('closeBookModal');
+    const bookLoader = document.getElementById('bookLoader');
+
+    // Open modal when either thumbnail or button is clicked
+    document.querySelectorAll('[data-book]').forEach(el => {
+      el.addEventListener('click', () => {
+        const bookURL = el.getAttribute('data-book');
+        
+        // Show loader
+        if (bookLoader) {
+          bookLoader.classList.remove('hidden');
         }
+        
+        bookFrame.src = bookURL;
+        bookModal.style.display = 'flex';
       });
     });
-  </script>  
+
+    // Hide loader when book iframe loads
+    bookFrame.addEventListener('load', () => {
+      if (bookLoader) {
+        bookLoader.classList.add('hidden');
+      }
+    });
+
+    // Handle iframe load errors
+    bookFrame.addEventListener('error', () => {
+      console.error('Book iframe failed to load');
+      if (bookLoader) {
+        bookLoader.classList.add('hidden');
+      }
+    });
+
+    // Close modal function
+    function closeBookModalFunc() {
+      bookModal.style.display = 'none';
+      bookFrame.src = '';
+      // Show loader again for next book
+      if (bookLoader) {
+        bookLoader.classList.remove('hidden');
+      }
+    }
+
+    // Close modal
+    closeBookModal.addEventListener('click', closeBookModalFunc);
+
+    // Close modal on outside click
+    window.addEventListener('click', (e) => {
+      if (e.target === bookModal) {
+        closeBookModalFunc();
+      }
+    });
+    
+    // Update home link
+    const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+    if (homeLink) {
+      homeLink.href = getHomeUrl();
+    }
+  </script>
 </body>
 </html>

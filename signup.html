@@ -1,234 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up - Englishtopia</title>
+  <title>Sign Up - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-    /* Sidebar (consistent with other pages) */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      margin-bottom: 30px;
-      letter-spacing: -0.5px;
-      text-align: center;
-    }
-
-    #signupForm {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 30px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #signupForm:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
-    }
-
-    #signupForm label {
-      display: block;
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #4b5563;
-      margin-bottom: 8px;
-    }
-
-    #signupForm input {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border: 1px solid #2a9d8f;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #signupForm input:focus {
-      border-color: #21867a;
-      box-shadow: 0 0 8px rgba(42, 157, 143, 0.3);
-    }
-
-    #signupForm button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      width: 100%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #signupForm button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    #signup-message {
-      font-size: 1rem;
-      font-weight: 500;
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
-      #signupForm {
-        padding: 20px;
-      }
-
-      #signupForm label {
-        font-size: 1rem;
-      }
-
-      #signupForm input {
-        padding: 10px;
-        font-size: 0.9rem;
-      }
-
-      #signupForm button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-
-      #signup-message {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
+<body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
@@ -239,66 +20,57 @@
   </div>
   <main class="container">
     <h2>Sign Up</h2>
-    <form id="signupForm">
-      <label for="signup-username">Username</label>
-      <input type="text" id="signup-username" required>
-      <label for="signup-email">Email</label>
-      <input type="email" id="signup-email" required>
-      <label for="signup-password">Password</label>
-      <input type="password" id="signup-password" required>
-      <button type="submit" data-action="signup">Create account</button>
-    </form>
-    <p id="signup-message"></p>
+    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+      <form id="signupForm" class="form-container">
+      <div class="form-group">
+        <label for="signup-username">Username</label>
+        <input type="text" id="signup-username" required>
+      </div>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" required>
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" required>
+      </div>
+        <button type="submit" class="btn" data-action="signup">Create account</button>
+      </form>
+      <p id="signup-message" class="message"></p>
+    </div>
   </main>
-  <script type="module">
-    // Import Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // 🔹 Replace with your Firebase project config
-    const firebaseConfig = {
-      apiKey: "AIzaSyD6ubtFQ2w6Oe1poQtGEQR5xXgWTnnP8eM",
-      authDomain: "english-topia.firebaseapp.com",
-      projectId: "english-topia",
-      storageBucket: "english-topia.firebasestorage.app",
-      messagingSenderId: "G-LDESF481CF",
-      appId: ":374842038898:web:f1890835d4cee61d2d00eb"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Handle form submission
-    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  <script src="app.js"></script>
+  <script>
+    // Signup page specific functionality
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
       e.preventDefault();
-
       const username = document.getElementById("signup-username").value;
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
-      const msg = document.getElementById("signup-message");
-
-      try {
-        // Create user with email & password
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // 🔹 Save username in Firebase profile
-        await updateProfile(user, { displayName: username });
-
-        msg.style.color = "green";
-        msg.textContent = "Account created! Redirecting to login...";
-
-        // Redirect to login page after signup
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1200);
-      } catch (error) {
-        msg.style.color = "red";
-        msg.textContent = error.message;
+      
+      // Validate inputs
+      if (!isValidEmail(email)) {
+        showMessage("Please enter a valid email address", 'error', 'signup-message');
+        return;
+      }
+      
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.success) {
+        showMessage(passwordValidation.message, 'error', 'signup-message');
+        return;
+      }
+      
+      // Use the centralized signup function
+      const result = signupUser(username, email, password);
+      
+      if (result.success) {
+        showMessage("Account created! Redirecting to login...", 'success', 'signup-message');
+        setTimeout(() => window.location.href = "login.html", 1000);
+      } else {
+        showMessage(result.message, 'error', 'signup-message');
       }
     });
   </script>
 </body>
-
 </html>

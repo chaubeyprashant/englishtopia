@@ -4,289 +4,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Main Page - Englishtopia</title>
+  <title>Unolingo - Learn English Confidently</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Main content */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      position: relative;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 30px;
-      cursor: pointer;
-      color: #6b7280;
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-
-    .close-btn:hover {
-      transform: rotate(90deg);
-      color: #2a9d8f;
-    }
-
-    h1 {
-      margin-bottom: 35px;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      text-align: center;
-      letter-spacing: -0.5px;
-    }
-
-    /* Video preview box */
-    .video-box {
-      width: 560px;
-      height: 140px;
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .video-box:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .triangle {
-      width: 0;
-      height: 0;
-      border-left: 28px solid #2a9d8f;
-      border-top: 16px solid transparent;
-      border-bottom: 16px solid transparent;
-    }
-
-    /* Image boxes */
-    .image-container {
-      display: flex;
-      gap: 40px;
-      margin-bottom: 35px;
-    }
-
-    .image-box {
-      width: 220px;
-      height: 140px;
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.2rem;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .image-box:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-    }
-
-    .description {
-      font-size: 16px;
-      font-weight: 400;
-      text-align: center;
-      margin-bottom: 20px;
-      color: #4b5563;
-      max-width: 600px;
-      line-height: 1.5;
-    }
-
-    /* Test button */
-    .test-button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 14px 32px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-      text-decoration: none;
-    }
-
-    .test-button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .main-content {
-        padding: 20px;
-      }
-
-      .video-box {
-        width: 100%;
-        max-width: 400px;
-        height: 120px;
-      }
-
-      .image-container {
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .image-box {
-        width: 100%;
-        max-width: 300px;
-        height: 120px;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .description {
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-  <div class="sidebar">
-    <div class="logo">Englishtopia</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
-    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
-    <a href="level-test.html" class="nav-button">♜ Test your level</a>
-    <a href="videos.html" class="nav-button">🎥 Videos</a>
-    <a href="books.html" class="nav-button">📖 Books</a>
-    <a href="profile.html" class="nav-button">⚔️ Profile</a>
-    <a href="settings.html" class="nav-button">🪶 Settings</a>
-  </div>
+<body class="header-layout">
+  <header class="header">
+    <div class="logo">Unolingo</div>
+    <nav class="nav-links">
+      <a href="homepage.html" class="nav-link">Home</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="signup.html" class="nav-link">Sign-up</a>
+    </nav>
+  </header>
 
-  <div class="main-content">
-    <div class="close-btn" onclick="alert('Close clicked')">&#10006;</div>
-    <h1>Your Multi-Media English Learning Hub</h1>
-    <div class="video-box" onclick="window.location.href='videos.html'">
-      <div class="triangle"></div>
+  <main class="main-content">
+    <div class="content-left">
+      <h1 class="main-heading">
+        Learn and use English<br>
+        <span class="highlight">confidently.</span>
+      </h1>
+      <p class="description">
+        Improve your English in more ways than one. Choose how you want to start, check your current level, and then begin your English learning journey!
+      </p>
+      <button class="cta-button" data-action="get-started">Get started</button>
     </div>
-    <div class="image-container">
-      <div class="image-box">🖼️</div>
-      <div class="image-box">🖼️</div>
+    
+    <div class="content-right">
+      <div class="icon-placeholder">
+        <div class="arrows">
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+          <div class="arrow"></div>
+        </div>
+      </div>
     </div>
-    <div class="description">
-      Begin your journey by taking a test to see what level you are currently at
-    </div>
-    <a href="quizzes.html" class="test-button" onclick="alert('Test started')">Take the Test</a>
-  </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // Landing page specific functionality
+    addEventListeners('[data-action="get-started"]', 'Get started button', () => {
+      window.location.href = 'homepage.html';
+    });
+  </script>
 </body>
 
 </html>

@@ -3,249 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Videos - Englishtopia</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="autoplay=(self https://www.youtube.com https://www.youtube-nocookie.com), encrypted-media=(self https://www.youtube.com https://www.youtube-nocookie.com), accelerometer=(self https://www.youtube.com https://www.youtube-nocookie.com), gyroscope=(self https://www.youtube.com https://www.youtube-nocookie.com), picture-in-picture=(self https://www.youtube.com https://www.youtube-nocookie.com), clipboard-write=(self https://www.youtube.com https://www.youtube-nocookie.com), web-share=(self https://www.youtube.com https://www.youtube-nocookie.com)">
+  <title>Videos - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
+    .modal.show {
       display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
+      justify-content: center;
+      align-items: center;
     }
 
-    /* Sidebar (consistent with other pages) */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
+    .modal-content {
+      position: relative;
+      background-color: #fff;
+      padding: 1rem;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 8px;
+    }
+
+    .modal-content iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Loader styling */
+    .loader {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      text-align: left;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 10;
+      border-radius: 8px;
     }
 
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    .loader.hidden {
+      display: none;
     }
 
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      overflow-y: auto;
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #2a9d8f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      margin-top: 15px;
       color: #2a9d8f;
-      text-align: center;
-      margin-bottom: 40px;
-      letter-spacing: -0.5px;
-    }
-
-    /* Grid for video cards */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #2a9d8f;
-      margin-bottom: 10px;
-    }
-
-    .card button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 16px;
-      padding: 12px 24px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 2rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .card {
-        max-width: 350px;
-        margin: 0 auto;
-      }
-
-      .card h3 {
-        font-size: 1.3rem;
-      }
-
-      .card button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
+    .modal-content {
+      position: relative;
     }
   </style>
 </head>
-<body>
+<body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
+
   <main class="container">
     <h2>Videos</h2>
     <div class="grid">
       <div class="card">
-        <h3>Interesting Video 1</h3>
-        <button data-action="watch-video-1">Watch</button>
+        <h3>Beginner English - Daily Conversations</h3>
+        <p>Learn basic English phrases and daily conversations</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=d0yGdNEWdn0">Watch</button>
       </div>
       <div class="card">
-        <h3>Interesting Video 2</h3>
-        <button data-action="watch-video-2">Watch</button>
+        <h3>Intermediate English - Grammar Lessons</h3>
+        <p>Improve your grammar with interactive lessons</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=Q4xiJbVWGos">Watch</button>
       </div>
       <div class="card">
-        <h3>Interesting Video 3</h3>
-        <button data-action="watch-video-3">Watch</button>
+        <h3>Advanced English - Business Communication</h3>
+        <p>Master professional English for business settings</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=bCFXQTlE8Qc">Watch</button>
+      </div>
+      <div class="card">
+        <h3>English Pronunciation Guide</h3>
+        <p>Perfect your pronunciation and accent</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=32LHdzqL0g4">Watch</button>
+      </div>
+      <div class="card">
+        <h3>English Vocabulary Building</h3>
+        <p>Expand your vocabulary with fun exercises</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=9Fo5-M9v0Zs">Watch</button>
+      </div>
+      <div class="card">
+        <h3>English Listening Practice</h3>
+        <p>Improve your listening skills with native speakers</p>
+        <button class="btn" data-video="https://www.youtube.com/watch?v=J6j9ZtXM4kY">Watch</button>
       </div>
     </div>
   </main>
+
+  <!-- Modal -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <div class="loader" id="videoLoader">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading video...</div>
+      </div>
+      <iframe id="videoFrame" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" frameborder="0" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
   <script>
-    const videoLinks = {
-      "watch-video-1": "https://www.youtube.com/watch?v=36GHWmJZsmw",
-      "watch-video-2": "https://www.youtube.com/watch?v=2_zR3rL-dMM",
-      "watch-video-3": "https://www.youtube.com/watch?v=2aXKfZQ3VfE"
-    };
-  
-    document.querySelectorAll("button[data-action]").forEach(button => {
-      button.addEventListener("click", () => {
-        const action = button.getAttribute("data-action");
-        if (videoLinks[action]) {
-          window.open(videoLinks[action], "_blank"); // opens in new tab
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Modal elements
+      const modal = document.getElementById('videoModal');
+      const videoFrame = document.getElementById('videoFrame');
+      const closeModal = document.getElementById('closeModal');
+      const videoLoader = document.getElementById('videoLoader');
+      
+      // Store original video URL for fallback
+      let currentVideoUrl = '';
+
+      // YouTube Embed Relay URL - Update this to your deployed relay URL
+      // See YOUTUBE_RELAY_SETUP.md for detailed setup instructions
+      // 
+      // For production: Deploy youtube-relay.html to an HTTPS hosting service
+      // (CloudFlare Pages, GitHub Pages, Netlify, etc.) and update this URL
+      // Example: 'https://your-relay-domain.pages.dev/youtube-relay.html'
+      //
+      // For local testing: Use a local HTTP server (not file:// protocol)
+      // Run: python3 -m http.server 8000
+      // Then access: http://localhost:8000/videos.html
+      
+      // Detect if running from file:// protocol (won't work with YouTube)
+      function getRelayUrl() {
+        const origin = window.location.origin;
+        
+        // If file:// protocol, show helpful error
+        if (origin === 'null' || origin.startsWith('file://')) {
+          console.error('YouTube embeds require HTTP server. Use: python3 -m http.server 8000');
+          return null;
+        }
+        
+        // For local HTTP server or deployed site
+        return origin + '/youtube-relay.html';
+      }
+      
+      const RELAY_URL = getRelayUrl();
+      
+      // Convert YouTube URL to embed format using the relay
+      function convertToEmbedUrl(url) {
+        if (!url) return '';
+        
+        // Check if relay URL is available
+        if (!RELAY_URL) {
+          console.error('Relay URL not available. Make sure you are using an HTTP server, not file:// protocol.');
+          return null;
+        }
+        
+        // Extract video ID from various YouTube URL formats
+        let videoId = '';
+        const patterns = [
+          /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube-nocookie\.com\/embed\/)([^&\n?#]+)/,
+          /youtube\.com\/.*[?&]v=([^&\n?#]+)/
+        ];
+        
+        for (const pattern of patterns) {
+          const match = url.match(pattern);
+          if (match && match[1]) {
+            videoId = match[1];
+            break;
+          }
+        }
+        
+        if (videoId) {
+          // Use the YouTube Embed Relay to handle the embedding
+          // The relay will handle all the YouTube API requirements
+          return `${RELAY_URL}?v=${encodeURIComponent(videoId)}&playsinline=1&autoplay=0`;
+        }
+        
+        // If not a YouTube URL, return original (for other video sources)
+        return url;
+      }
+
+      // Open modal when button clicked
+      document.querySelectorAll('.btn[data-video]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const videoURL = this.getAttribute('data-video');
+          currentVideoUrl = videoURL; // Store for fallback
+          const embedURL = convertToEmbedUrl(videoURL);
+          
+          if (!RELAY_URL) {
+            alert('YouTube videos require an HTTP server.\n\nPlease:\n1. Start a local server: python3 -m http.server 8000\n2. Access via: http://localhost:8000/videos.html\n\nOr deploy to a web hosting service.');
+            return;
+          }
+          
+          if (embedURL) {
+            // Show loader
+            if (videoLoader) {
+              videoLoader.classList.remove('hidden');
+            }
+            
+            // Clear any previous error state
+            videoFrame.src = '';
+            // Set the new source
+            setTimeout(() => {
+              videoFrame.src = embedURL;
+              modal.classList.add('show');
+            }, 100);
+          } else {
+            alert('Invalid video URL');
+          }
+        });
+      });
+      
+      // Add a button in modal to open video directly on YouTube if embed fails
+      const modalContent = document.querySelector('.modal-content');
+      if (modalContent && !document.getElementById('openOnYouTubeBtn')) {
+        const openOnYouTubeBtn = document.createElement('button');
+        openOnYouTubeBtn.id = 'openOnYouTubeBtn';
+        openOnYouTubeBtn.textContent = 'Open on YouTube';
+        openOnYouTubeBtn.className = 'btn';
+        openOnYouTubeBtn.style.cssText = 'margin-top: 10px; padding: 8px 16px; background: #2a9d8f; color: white; border: none; border-radius: 4px; cursor: pointer;';
+        openOnYouTubeBtn.addEventListener('click', () => {
+          if (currentVideoUrl) {
+            window.open(currentVideoUrl, '_blank');
+          }
+        });
+        modalContent.appendChild(openOnYouTubeBtn);
+      }
+      
+      // Handle iframe load - hide loader when video loads
+      videoFrame.addEventListener('load', () => {
+        if (videoLoader) {
+          videoLoader.classList.add('hidden');
+        }
+      });
+
+      // Handle iframe load errors
+      videoFrame.addEventListener('error', () => {
+        console.error('Video iframe failed to load');
+        // Hide loader on error
+        if (videoLoader) {
+          videoLoader.classList.add('hidden');
+        }
+        // Show helpful error message
+        const errorMsg = document.createElement('div');
+        errorMsg.style.cssText = 'padding: 20px; text-align: center; color: #ef4444;';
+        errorMsg.innerHTML = `
+          <p><strong>Video failed to load</strong></p>
+          <p>This may be due to:</p>
+          <ul style="text-align: left; display: inline-block;">
+            <li>Relay not deployed or incorrect RELAY_URL</li>
+            <li>Opening file via file:// protocol (use HTTP server)</li>
+            <li>Network/CORS issues</li>
+          </ul>
+          <p>See YOUTUBE_RELAY_SETUP.md for setup instructions.</p>
+        `;
+        const modalContent = document.querySelector('.modal-content');
+        if (modalContent && !modalContent.querySelector('div[style*="color: #ef4444"]')) {
+          modalContent.insertBefore(errorMsg, videoFrame);
+        }
+      });
+      
+      // Update home link
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) {
+        homeLink.href = getHomeUrl();
+      }
+
+      // Close modal function
+      function closeModalFunc() {
+        modal.classList.remove('show');
+        videoFrame.src = ''; // stop video
+        // Show loader again for next video
+        if (videoLoader) {
+          videoLoader.classList.remove('hidden');
+        }
+      }
+
+      // Close modal
+      if (closeModal) {
+        closeModal.addEventListener('click', closeModalFunc);
+      }
+
+      // Close modal on outside click
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModalFunc();
+        }
+      });
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+          closeModalFunc();
         }
       });
     });
-  </script>  
+  </script>
 </body>
 </html>

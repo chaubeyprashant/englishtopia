@@ -1,291 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - Englishtopia</title>
+  <title>Profile - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-    /* Sidebar (consistent with other pages) */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    #profile-box {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 30px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #profile-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
-    }
-
-    #profile-box h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      margin-bottom: 20px;
-      letter-spacing: -0.5px;
-    }
-
-    #profile-box p {
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: #4b5563;
-      margin-bottom: 15px;
-      line-height: 1.5;
-    }
-
-    #profile-box p b {
-      color: #2a9d8f;
-      font-weight: 600;
-    }
-
-    #profile-box button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      margin: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    #profile-box button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    #profile-box a {
-      text-decoration: none;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      #profile-box {
-        padding: 20px;
-      }
-
-      #profile-box h2 {
-        font-size: 1.8rem;
-      }
-
-      #profile-box p {
-        font-size: 1rem;
-      }
-
-      #profile-box button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
+<body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
-  <main class="container" id="profile-box"></main>
+  <main class="container">
+    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+      <div id="profile-box" class="profile-box"></div>
+    </div>
+  </main>
 
-  <!-- Use the compatibility version of Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
+  <script src="app.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyD6ubtFQ2w6Oe1poQtGEQR5xXgWTnnP8eM",
-      authDomain: "english-topia.firebaseapp.com",
-      projectId: "english-topia",
-      storageBucket: "english-topia.firebasestorage.app",
-      messagingSenderId: "G-LDESF481CF",
-      appId: "1:374842038898:web:f1890835d4cee61d2d00eb"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    
-    const box = document.getElementById("profile-box");
-    
-    // Function to format date
-    function formatDate(dateString) {
-      if (!dateString) return 'Unknown';
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-    }
-
-    // Listen for auth state changes
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // User is logged in
-        const username = user.displayName || user.email;
-        const joined = formatDate(user.metadata.creationTime);
-        const lastLogin = formatDate(user.metadata.lastSignInTime);
-
-        box.innerHTML = `
-          <h2>Your Profile</h2>
-          <p><b>Name:</b> ${username}</p>
-          <p><b>Email:</b> ${user.email}</p>
-          <p><b>Joined:</b> ${joined}</p>
-          <p><b>Last Login:</b> ${lastLogin}</p>
-          <button id="logout-btn">Logout</button>
-        `;
-        
-        // Add event listener to the logout button
-        document.getElementById('logout-btn').addEventListener('click', logout);
-      } else {
-        // User not logged in
-        box.innerHTML = `
-          <p>You are not logged in.</p>
-          <a href="login.html"><button>Login</button></a>
-        `;
-      }
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
     });
+  </script>
+  <script>
+    // Profile page specific functionality
+    const loggedIn = localStorage.getItem("loggedIn");
+    const box = document.getElementById("profile-box");
 
-    // Logout function
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "index.html";
-      }).catch((error) => {
-        console.error("Logout error:", error);
-      });
+    if (loggedIn) {
+      const currentUser = getCurrentUser();
+      const userLevel = localStorage.getItem("userLevel") || "Not tested yet";
+      box.innerHTML = `
+        <h2>Your Profile</h2>
+        <p><b>Name:</b> ${currentUser ? currentUser.username : 'Demo User'}</p>
+        <p><b>Email:</b> ${currentUser ? currentUser.email : 'demo@example.com'}</p>
+        <p><b>Joined:</b> 1 Jan 2025</p>
+        <p><b>Level:</b> ${userLevel}</p>
+        <button class="btn" data-action="logout">Logout</button>
+      `;
+    } else {
+      box.innerHTML = `
+        <h2>Profile</h2>
+        <p>You are not logged in.</p>
+        <a href="login.html"><button class="btn" data-action="login">Login</button></a>
+      `;
     }
-  </script>  
-</body>
 
+    // Event handlers for profile buttons
+    addEventListeners('[data-action="logout"]', 'Logout button', () => {
+      logoutUser();
+      window.location.href = "index.html";
+    });
+    addEventListeners('[data-action="login"]', 'Login button', () => window.location.href = 'login.html');
+  </script>
+</body>
 </html>

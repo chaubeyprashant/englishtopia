@@ -3,253 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Result - Englishtopia</title>
+  <title>Result - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: #f4f7fa;
-    }
-
-     /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, #2a9d8f, #1e7a6c);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      color: #fff;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      background: #fff;
-      color: #2a9d8f;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-
-    /* Main content */
-    .container {
-      flex: 1;
-      padding: 50px;
-      background: linear-gradient(180deg, #ffffff, #f9fafb);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-
-    #result-box {
-      background: #fff;
-      border: 2px solid #2a9d8f;
-      border-radius: 14px;
-      padding: 30px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #result-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
-    }
-
-    #result-box h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #2a9d8f;
-      margin-bottom: 20px;
-      letter-spacing: -0.5px;
-    }
-
-    #result-box p {
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: #4b5563;
-      margin-bottom: 15px;
-      line-height: 1.5;
-    }
-
-    #result-box p b {
-      color: #2a9d8f;
-      font-weight: 600;
-    }
-
-    #result-box button {
-      background: #2a9d8f;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      margin: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    #result-box button:hover {
-      transform: scale(1.06);
-      background: #21867a;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-    .nav-button {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 20px;
-      margin: 8px 0;
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(6px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .logo {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-
-      .nav-button {
-        width: auto;
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      #result-box {
-        padding: 20px;
-      }
-
-      #result-box h2 {
-        font-size: 1.8rem;
-      }
-
-      #result-box p {
-        font-size: 1rem;
-      }
-
-      #result-box button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="sidebar-layout">
   <div class="sidebar">
-    <div class="logo">Englishtopia</div>
+    <div class="logo">Unolingo</div>
     <a href="index.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
     <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
     <a href="profile.html" class="nav-button">⚔️ Profile</a>
     <a href="settings.html" class="nav-button">🪶 Settings</a>
   </div>
-  <main class="container" id="result-box"></main>
+  <main class="container">
+    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+      <div id="result-box" class="result-box"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
   <script>
-    // Calculate score and render result
-    const score = localStorage.getItem("score") || 0;
-    const total = 2;
-    let grade = "A2";
-    const pct = (score / total) * 100;
-    if (pct >= 90) grade = "A";
-    else if (pct >= 80) grade = "B+";
-    else if (pct >= 70) grade = "B";
-    else if (pct >= 60) grade = "C1";
-    else if (pct >= 50) grade = "B1";
+    // Update home link
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
+      if (homeLink) homeLink.href = getHomeUrl();
+    });
+  </script>
+  <script>
+    // Level result page specific functionality
+    function displayResults() {
+      const results = getLevelTestResults();
+      const box = document.getElementById("result-box");
+      
+      if (results && results.totalQuestions) {
+        // Store user level for profile
+        localStorage.setItem("userLevel", results.overallLevel || "Not tested yet");
+        
+        // Update highest level achieved
+        if (results.overallLevel) {
+          updateHighestLevel(results.overallLevel);
+        }
+        
+        box.innerHTML = `
+          <h2>Congratulations Traveler!</h2>
+          <p>You scored ${results.correctAnswers} / ${results.totalQuestions}</p>
+          <p>Your level is: <b>${results.overallLevel}</b></p>
+          <p>Percentage: <b>${results.percentage}%</b></p>
+          <button class="btn" data-action="return">Return Home</button>
+          <button class="btn" data-action="retake">Retake Test</button>
+        `;
+      } else {
+        // Fallback for old format
+        const score = parseInt(localStorage.getItem("score")) || 0;
+        const total = parseInt(localStorage.getItem("totalQuestions")) || 10;
+        const pct = total > 0 ? (score / total) * 100 : 0;
+        
+        let grade = "A2";
+        if (pct >= 90) grade = "A";
+        else if (pct >= 80) grade = "B+";
+        else if (pct >= 70) grade = "B";
+        else if (pct >= 60) grade = "C1";
+        else if (pct >= 50) grade = "B1";
+        else if (pct >= 40) grade = "A2";
+        else grade = "A1";
+        
+        // Store user level for profile
+        localStorage.setItem("userLevel", grade);
+        
+        // Map old grade format to new level format for progress tracking
+        const levelMap = {
+          "A1": "Beginner",
+          "A2": "Elementary",
+          "B1": "Elementary",
+          "B": "Intermediate",
+          "B+": "Intermediate",
+          "C1": "Intermediate",
+          "A": "Advanced"
+        };
+        const mappedLevel = levelMap[grade] || "Beginner";
+        updateHighestLevel(mappedLevel);
 
-    document.getElementById("result-box").innerHTML = `
-      <h2>Congratulations Traveler!</h2>
-      <p>You scored ${score} / ${total}</p>
-      <p>Your level is: <b>${grade}</b></p>
-      <a href="index.html"><button data-action="return">Return</button></a>
-      <a href="level-test.html"><button data-action="retake">Retake</button></a>
-    `;
-
-    // Function to handle both click and touchstart events
-    function addEventListeners(selector, action, callback) {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        element.addEventListener('click', () => {
-          console.log(`${action} clicked`);
-          callback();
-        });
-        element.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Prevent click event from firing twice on touch devices
-          console.log(`${action} tapped`);
-          callback();
-        });
-      });
+        box.innerHTML = `
+          <h2>Congratulations Traveler!</h2>
+          <p>You scored ${score} / ${total}</p>
+          <p>Your level is: <b>${grade}</b></p>
+          <button class="btn" data-action="return">Return Home</button>
+          <button class="btn" data-action="retake">Retake Test</button>
+        `;
+      }
     }
 
     // Event handlers for result buttons
-    addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'index.html');
+    addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'homepage.html');
     addEventListeners('[data-action="retake"]', 'Retake button', () => window.location.href = 'level-test.html');
+
+    // Display results when page loads
+    displayResults();
   </script>
 </body>
 </html>

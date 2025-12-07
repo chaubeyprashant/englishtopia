@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Translator - Unolingo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .translator-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .translator-box {
+      background: #fff;
+      border: 2px solid #2a9d8f;
+      border-radius: 14px;
+      padding: 30px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .language-selector {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .language-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .language-group label {
+      display: block;
+      font-weight: 600;
+      color: #2a9d8f;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .language-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #2a9d8f;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    .language-group select:hover {
+      border-color: #21867a;
+    }
+
+    .swap-button {
+      background: #2a9d8f;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, background 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .swap-button:hover {
+      background: #21867a;
+      transform: rotate(180deg);
+    }
+
+    .text-area-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .text-area-wrapper {
+      position: relative;
+    }
+
+    .text-area-wrapper label {
+      display: block;
+      font-weight: 600;
+      color: #2a9d8f;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .text-area-wrapper textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 15px;
+      border: 2px solid #2a9d8f;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+
+    .text-area-wrapper textarea:focus {
+      outline: none;
+      border-color: #21867a;
+    }
+
+    .translate-button {
+      background: #2a9d8f;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .translate-button:hover {
+      transform: scale(1.02);
+      background: #21867a;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .translate-button:disabled {
+      background: #b0bec5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      text-align: center;
+      color: #2a9d8f;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .error {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 1px solid #fcc;
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .char-count {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      .text-area-group {
+        grid-template-columns: 1fr;
+      }
+
+      .language-selector {
+        flex-direction: column;
+      }
+
+      .swap-button {
+        transform: rotate(90deg);
+      }
+
+      .swap-button:hover {
+        transform: rotate(270deg);
+      }
+    }
+  </style>
+</head>
+<body class="sidebar-layout">
+  <div class="sidebar">
+    <div class="logo">Unolingo</div>
+    <a href="#" class="nav-button" id="home-link">🏠 Home</a>
+    <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
+    <a href="level-test.html" class="nav-button">♜ Test your level</a>
+    <a href="videos.html" class="nav-button">🎥 Videos</a>
+    <a href="books.html" class="nav-button">📖 Books</a>
+    <a href="translator.html" class="nav-button">🌐 Translator</a>
+    <a href="profile.html" class="nav-button">⚔️ Profile</a>
+    <a href="settings.html" class="nav-button">🪶 Settings</a>
+  </div>
+
+  <main class="container">
+    <h2>Translator</h2>
+    <div class="translator-container">
+      <div class="translator-box">
+        <div class="language-selector">
+          <div class="language-group">
+            <label for="source-language">From</label>
+            <select id="source-language">
+              <option value="auto">Auto-detect</option>
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+              <option value="it">Italian</option>
+              <option value="pt">Portuguese</option>
+              <option value="ru">Russian</option>
+              <option value="ja">Japanese</option>
+              <option value="ko">Korean</option>
+              <option value="zh">Chinese</option>
+              <option value="ar">Arabic</option>
+              <option value="hi">Hindi</option>
+              <option value="nl">Dutch</option>
+              <option value="pl">Polish</option>
+              <option value="tr">Turkish</option>
+              <option value="sv">Swedish</option>
+              <option value="da">Danish</option>
+              <option value="no">Norwegian</option>
+              <option value="fi">Finnish</option>
+            </select>
+          </div>
+          <button class="swap-button" id="swap-languages" title="Swap languages">⇄</button>
+          <div class="language-group">
+            <label for="target-language">To</label>
+            <select id="target-language">
+              <option value="en" selected>English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+              <option value="it">Italian</option>
+              <option value="pt">Portuguese</option>
+              <option value="ru">Russian</option>
+              <option value="ja">Japanese</option>
+              <option value="ko">Korean</option>
+              <option value="zh">Chinese</option>
+              <option value="ar">Arabic</option>
+              <option value="hi">Hindi</option>
+              <option value="nl">Dutch</option>
+              <option value="pl">Polish</option>
+              <option value="tr">Turkish</option>
+              <option value="sv">Swedish</option>
+              <option value="da">Danish</option>
+              <option value="no">Norwegian</option>
+              <option value="fi">Finnish</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="text-area-group">
+          <div class="text-area-wrapper">
+            <label for="source-text">Enter text to translate</label>
+            <textarea id="source-text" placeholder="Type or paste text here..."></textarea>
+            <div class="char-count"><span id="source-count">0</span> characters</div>
+          </div>
+          <div class="text-area-wrapper">
+            <label for="translated-text">Translation</label>
+            <textarea id="translated-text" placeholder="Translation will appear here..." readonly></textarea>
+            <div class="char-count"><span id="translated-count">0</span> characters</div>
+          </div>
+        </div>
+
+        <button class="translate-button" id="translate-btn">Translate</button>
+        <div id="loading" class="loading" style="display: none;">Translating...</div>
+        <div id="error" class="error" style="display: none;"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // Set home link
+    document.getElementById('home-link').href = getHomeUrl();
+
+    const sourceLanguage = document.getElementById('source-language');
+    const targetLanguage = document.getElementById('target-language');
+    const sourceText = document.getElementById('source-text');
+    const translatedText = document.getElementById('translated-text');
+    const translateBtn = document.getElementById('translate-btn');
+    const swapBtn = document.getElementById('swap-languages');
+    const loadingDiv = document.getElementById('loading');
+    const errorDiv = document.getElementById('error');
+    const sourceCount = document.getElementById('source-count');
+    const translatedCount = document.getElementById('translated-count');
+
+    // Character counter
+    sourceText.addEventListener('input', () => {
+      sourceCount.textContent = sourceText.value.length;
+    });
+
+    translatedText.addEventListener('input', () => {
+      translatedCount.textContent = translatedText.value.length;
+    });
+
+    // Swap languages
+    swapBtn.addEventListener('click', () => {
+      const sourceLang = sourceLanguage.value;
+      const targetLang = targetLanguage.value;
+      const sourceTextValue = sourceText.value;
+      const translatedTextValue = translatedText.value;
+
+      // Swap languages (skip auto-detect)
+      if (sourceLang !== 'auto') {
+        sourceLanguage.value = targetLang;
+        targetLanguage.value = sourceLang;
+      } else {
+        targetLanguage.value = sourceLang === 'auto' ? 'en' : sourceLang;
+      }
+
+      // Swap text
+      sourceText.value = translatedTextValue;
+      translatedText.value = sourceTextValue;
+      sourceCount.textContent = sourceText.value.length;
+      translatedCount.textContent = translatedText.value.length;
+    });
+
+    // Translation function using Google Translate API (free tier)
+    async function translateText() {
+      const text = sourceText.value.trim();
+      if (!text) {
+        errorDiv.textContent = 'Please enter text to translate.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const sourceLang = sourceLanguage.value === 'auto' ? 'auto' : sourceLanguage.value;
+      const targetLang = targetLanguage.value;
+
+      if (sourceLang === targetLang && sourceLang !== 'auto') {
+        errorDiv.textContent = 'Source and target languages cannot be the same.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      loadingDiv.style.display = 'block';
+      errorDiv.style.display = 'none';
+      translateBtn.disabled = true;
+
+      try {
+        // Use MyMemory Translation API (free, CORS-enabled)
+        // If auto-detect, try to detect language first
+        let detectedSourceLang = sourceLang;
+        
+        if (sourceLang === 'auto') {
+          // For auto-detect, try English first (most common), or use a detection API
+          // MyMemory doesn't support auto-detect, so we'll try common languages
+          detectedSourceLang = 'en';
+        }
+
+        // MyMemory Translation API - free tier with CORS support
+        // Using JSONP approach for better CORS compatibility
+        const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${detectedSourceLang}|${targetLang}`;
+        
+        // Try direct fetch first
+        let response;
+        try {
+          response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+            mode: 'cors'
+          });
+        } catch (fetchError) {
+          // If CORS fails, try JSONP approach
+          if (fetchError.message.includes('CORS') || fetchError.message.includes('Failed to fetch')) {
+            throw new Error('CORS_ERROR: Please run from a web server (not file://). Use: python -m http.server 8000');
+          }
+          throw fetchError;
+        }
+
+        if (!response.ok) {
+          throw new Error(`Translation service error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.responseStatus !== 200) {
+          // If translation fails, try with English as source
+          if (sourceLang === 'auto' && detectedSourceLang === 'en') {
+            // Try detecting by attempting translation from common languages
+            const commonLangs = ['es', 'fr', 'de', 'it', 'pt', 'ru'];
+            let translated = false;
+            
+            for (const lang of commonLangs) {
+              try {
+                const testUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${lang}|${targetLang}`;
+                const testResponse = await fetch(testUrl, { mode: 'cors' });
+                const testData = await testResponse.json();
+                
+                if (testData.responseStatus === 200 && testData.responseData && testData.responseData.translatedText) {
+                  translatedText.value = testData.responseData.translatedText;
+                  translatedCount.textContent = translatedText.value.length;
+                  translated = true;
+                  break;
+                }
+              } catch (e) {
+                continue;
+              }
+            }
+            
+            if (!translated) {
+              throw new Error('Could not detect source language. Please select it manually.');
+            }
+          } else {
+            throw new Error(data.responseData?.error || 'Translation failed. Please try again.');
+          }
+        } else {
+          // Success
+          const translatedTextValue = data.responseData?.translatedText || '';
+          if (!translatedTextValue || translatedTextValue === text) {
+            throw new Error('Translation returned same text. Please check language selection.');
+          }
+          translatedText.value = translatedTextValue;
+          translatedCount.textContent = translatedText.value.length;
+        }
+        
+        errorDiv.style.display = 'none';
+      } catch (error) {
+        console.error('Translation error:', error);
+        
+        // More user-friendly error messages
+        let errorMessage = '';
+        if (error.message.includes('CORS_ERROR')) {
+          errorMessage = error.message.replace('CORS_ERROR: ', '');
+        } else if (error.message.includes('CORS') || error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+          errorMessage = 'CORS Error: This app must be run from a web server, not opened as a file.\n\n';
+          errorMessage += 'Solutions:\n';
+          errorMessage += '1. Run: python -m http.server 8000 (then visit http://localhost:8000)\n';
+          errorMessage += '2. Or use: npx serve (if you have Node.js)\n';
+          errorMessage += '3. Or use: php -S localhost:8000 (if you have PHP)';
+        } else if (error.message.includes('Network')) {
+          errorMessage = 'Network error. Please check your internet connection.';
+        } else {
+          errorMessage = error.message || 'Translation failed. Please try again.';
+        }
+        
+        errorDiv.textContent = errorMessage;
+        errorDiv.style.display = 'block';
+        translatedText.value = '';
+      } finally {
+        loadingDiv.style.display = 'none';
+        translateBtn.disabled = false;
+      }
+    }
+
+    translateBtn.addEventListener('click', translateText);
+
+    // Auto-translate on Enter (Ctrl+Enter or Cmd+Enter)
+    sourceText.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        translateText();
+      }
+    });
+
+    // Clear error when user starts typing
+    sourceText.addEventListener('input', () => {
+      if (errorDiv.style.display === 'block') {
+        errorDiv.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
+
