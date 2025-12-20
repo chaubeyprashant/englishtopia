@@ -1,5 +1,5 @@
 /* ===========================================
-   ENGLISHPTOPIA - CONSOLIDATED STYLES
+   UNOLINGO - CONSOLIDATED STYLES
    =========================================== */
 
 /* --- GLOBAL STYLES --- */
@@ -540,8 +540,8 @@ h2 {
 
 /* Icon placeholder for homepage */
 .icon-placeholder {
-  width: 200px;
-  height: 200px;
+  width: 600px;
+  height: 600px;
   background: #f3f4f6;
   border: 2px solid #d1d5db;
   border-radius: 12px;
@@ -553,13 +553,13 @@ h2 {
 }
 
 .icon-placeholder::before {
-  content: "🏔️";
+  content: "";
   font-size: 3rem;
   margin-bottom: 10px;
 }
 
 .icon-placeholder::after {
-  content: "🌅";
+  content: "";
   font-size: 2rem;
   position: absolute;
   top: 20px;
