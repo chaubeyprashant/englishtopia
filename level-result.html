@@ -95,11 +95,11 @@
           <button class="btn" data-action="retake">Retake Test</button>
         `;
       }
-    }
 
-    // Event handlers for result buttons
-    addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = 'homepage.html');
-    addEventListeners('[data-action="retake"]', 'Retake button', () => window.location.href = 'level-test.html');
+      // Wire buttons AFTER they exist in the DOM
+      addEventListeners('[data-action="return"]', 'Return button', () => window.location.href = getHomeUrl());
+      addEventListeners('[data-action="retake"]', 'Retake button', () => window.location.href = 'level-test.html');
+    }
 
     // Display results when page loads
     displayResults();

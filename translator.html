@@ -91,6 +91,10 @@
       position: relative;
     }
 
+    .textarea-shell {
+      position: relative;
+    }
+
     .text-area-wrapper label {
       display: block;
       font-weight: 600;
@@ -109,6 +113,53 @@
       font-family: 'Inter', sans-serif;
       resize: vertical;
       transition: border-color 0.3s ease;
+    }
+
+    /* Leave room for icon actions at the bottom */
+    .text-area-wrapper.has-actions textarea {
+      padding-bottom: 56px;
+    }
+
+    .field-actions {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      background: #ffffff;
+      color: #374151;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      border-color: #2a9d8f;
+    }
+
+    .icon-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .icon-btn.active {
+      border-color: #2a9d8f;
+      background: #f0fdfa;
+      color: #2a9d8f;
     }
 
     .text-area-wrapper textarea:focus {
@@ -140,6 +191,36 @@
       background: #b0bec5;
       cursor: not-allowed;
       transform: none;
+    }
+
+    .dictate-status {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    .tts-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .tts-controls label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .tts-controls select {
+      padding: 8px 10px;
+      border: 2px solid #2a9d8f;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      cursor: pointer;
     }
 
     .loading {
@@ -257,16 +338,39 @@
         </div>
 
         <div class="text-area-group">
-          <div class="text-area-wrapper">
+          <div class="text-area-wrapper has-actions">
             <label for="source-text">Enter text to translate</label>
-            <textarea id="source-text" placeholder="Type or paste text here..."></textarea>
+            <div class="textarea-shell">
+              <textarea id="source-text" placeholder="Type or paste text here..."></textarea>
+              <div class="field-actions">
+                <button class="icon-btn" id="dictate-btn" type="button" title="Dictate (microphone)">🎤</button>
+                <button class="icon-btn" id="speak-source-btn" type="button" title="Listen (speaker)">🔊</button>
+              </div>
+            </div>
             <div class="char-count"><span id="source-count">0</span> characters</div>
+            <div class="dictate-status" id="dictate-status">Ready</div>
           </div>
-          <div class="text-area-wrapper">
+          <div class="text-area-wrapper has-actions">
             <label for="translated-text">Translation</label>
-            <textarea id="translated-text" placeholder="Translation will appear here..." readonly></textarea>
+            <div class="textarea-shell">
+              <textarea id="translated-text" placeholder="Translation will appear here..." readonly></textarea>
+              <div class="field-actions">
+                <button class="icon-btn" id="speak-translation-btn" type="button" title="Listen (speaker)">🔊</button>
+              </div>
+            </div>
             <div class="char-count"><span id="translated-count">0</span> characters</div>
+            <div class="dictate-status" id="tts-status">Ready</div>
           </div>
+        </div>
+
+        <div class="tts-controls">
+          <label for="tts-rate">Voice speed</label>
+          <select id="tts-rate" title="Change voice speed">
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+          </select>
         </div>
 
         <button class="translate-button" id="translate-btn">Translate</button>
@@ -291,6 +395,286 @@
     const errorDiv = document.getElementById('error');
     const sourceCount = document.getElementById('source-count');
     const translatedCount = document.getElementById('translated-count');
+    const dictateBtn = document.getElementById('dictate-btn');
+    const dictateStatus = document.getElementById('dictate-status');
+    const speakSourceBtn = document.getElementById('speak-source-btn');
+    const speakTranslationBtn = document.getElementById('speak-translation-btn');
+    const ttsStatus = document.getElementById('tts-status');
+    const ttsRateSelect = document.getElementById('tts-rate');
+
+    // Dictation (Web Speech API)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isDictating = false;
+
+    function setDictateUi(stateText, enabled, active) {
+      if (dictateStatus) dictateStatus.textContent = stateText;
+      if (dictateBtn) {
+        dictateBtn.disabled = !enabled;
+        // Keep button icon-only (Google Translate-like)
+        dictateBtn.textContent = active ? '⏹' : '🎤';
+        dictateBtn.classList.toggle('active', !!active);
+      }
+    }
+
+    function getRecognitionLang() {
+      // Map select values to common BCP-47 tags. Fallback to en-US.
+      const v = sourceLanguage.value;
+      const map = {
+        en: 'en-US',
+        es: 'es-ES',
+        fr: 'fr-FR',
+        de: 'de-DE',
+        it: 'it-IT',
+        pt: 'pt-PT',
+        ru: 'ru-RU',
+        ja: 'ja-JP',
+        ko: 'ko-KR',
+        zh: 'zh-CN',
+        ar: 'ar-SA',
+        hi: 'hi-IN',
+        nl: 'nl-NL',
+        pl: 'pl-PL',
+        tr: 'tr-TR',
+        sv: 'sv-SE',
+        da: 'da-DK',
+        no: 'no-NO',
+        fi: 'fi-FI',
+      };
+      return map[v] || 'en-US';
+    }
+
+    // Text-to-Speech (SpeechSynthesis)
+    const canTts = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    let voicesCache = [];
+    let activeUtterance = null;
+    let activeSpeakTarget = null; // 'source' | 'translation' | null
+    let ttsRate = 1;
+
+    function setTtsUi(stateText) {
+      if (ttsStatus) ttsStatus.textContent = stateText;
+    }
+
+    function getLangTagForSelectValue(v, fallback) {
+      const map = {
+        en: 'en-US',
+        es: 'es-ES',
+        fr: 'fr-FR',
+        de: 'de-DE',
+        it: 'it-IT',
+        pt: 'pt-PT',
+        ru: 'ru-RU',
+        ja: 'ja-JP',
+        ko: 'ko-KR',
+        zh: 'zh-CN',
+        ar: 'ar-SA',
+        hi: 'hi-IN',
+        nl: 'nl-NL',
+        pl: 'pl-PL',
+        tr: 'tr-TR',
+        sv: 'sv-SE',
+        da: 'da-DK',
+        no: 'no-NO',
+        fi: 'fi-FI',
+      };
+      return map[v] || fallback || 'en-US';
+    }
+
+    function refreshVoices() {
+      if (!canTts) return;
+      voicesCache = window.speechSynthesis.getVoices() || [];
+    }
+
+    if (canTts) {
+      refreshVoices();
+      // Some browsers load voices asynchronously
+      window.speechSynthesis.onvoiceschanged = refreshVoices;
+    }
+
+    function pickBestVoice(langTag) {
+      if (!voicesCache || voicesCache.length === 0) return null;
+      const exact = voicesCache.find(v => (v.lang || '').toLowerCase() === langTag.toLowerCase());
+      if (exact) return exact;
+      const prefix = langTag.split('-')[0].toLowerCase();
+      return voicesCache.find(v => (v.lang || '').toLowerCase().startsWith(prefix)) || null;
+    }
+
+    function setSpeakButtonsState() {
+      if (speakSourceBtn) speakSourceBtn.classList.toggle('active', activeSpeakTarget === 'source');
+      if (speakTranslationBtn) speakTranslationBtn.classList.toggle('active', activeSpeakTarget === 'translation');
+      if (speakSourceBtn) speakSourceBtn.textContent = activeSpeakTarget === 'source' ? '⏹' : '🔊';
+      if (speakTranslationBtn) speakTranslationBtn.textContent = activeSpeakTarget === 'translation' ? '⏹' : '🔊';
+    }
+
+    function stopSpeaking() {
+      if (!canTts) return;
+      try {
+        window.speechSynthesis.cancel();
+      } catch (e) {
+        console.error('speechSynthesis.cancel failed:', e);
+      } finally {
+        activeUtterance = null;
+        activeSpeakTarget = null;
+        setTtsUi('Ready');
+        setSpeakButtonsState();
+      }
+    }
+
+    function speak(text, langTag, target) {
+      if (!canTts) {
+        alert('Text-to-speech is not supported in this browser.');
+        return;
+      }
+      const trimmed = (text || '').trim();
+      if (!trimmed) {
+        alert('Nothing to read. Please enter text first.');
+        return;
+      }
+
+      // Tap speaker again to stop (Google Translate-like)
+      if (activeSpeakTarget && activeSpeakTarget === target) {
+        stopSpeaking();
+        return;
+      }
+
+      stopSpeaking();
+
+      const utter = new SpeechSynthesisUtterance(trimmed);
+      utter.lang = langTag || 'en-US';
+      utter.rate = ttsRate;
+      const voice = pickBestVoice(utter.lang);
+      if (voice) utter.voice = voice;
+
+      utter.onstart = () => {
+        activeUtterance = utter;
+        activeSpeakTarget = target || null;
+        setTtsUi('Speaking…');
+        setSpeakButtonsState();
+      };
+      utter.onend = () => {
+        activeUtterance = null;
+        activeSpeakTarget = null;
+        setTtsUi('Ready');
+        setSpeakButtonsState();
+      };
+      utter.onerror = (e) => {
+        console.error('TTS error:', e);
+        activeUtterance = null;
+        activeSpeakTarget = null;
+        setTtsUi('TTS error');
+        setSpeakButtonsState();
+      };
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    function startDictation() {
+      if (!SpeechRecognition) {
+        setDictateUi('Dictation not supported in this browser.', false, false);
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = sourceLanguage.value === 'auto' ? 'en-US' : getRecognitionLang();
+
+      let finalTranscript = '';
+
+      recognition.onstart = () => {
+        isDictating = true;
+        setDictateUi('Listening…', true, true);
+      };
+
+      recognition.onend = () => {
+        isDictating = false;
+        setDictateUi('Ready', true, false);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Dictation error:', event);
+        isDictating = false;
+        setDictateUi(`Dictation error: ${event.error || 'unknown'}`, true, false);
+      };
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const res = event.results[i];
+          const text = res[0] && res[0].transcript ? res[0].transcript : '';
+          if (res.isFinal) finalTranscript += text;
+          else interim += text;
+        }
+
+        const combined = (finalTranscript + interim).trim();
+        if (combined) {
+          sourceText.value = combined;
+          sourceCount.textContent = sourceText.value.length;
+        }
+      };
+
+      try {
+        recognition.start();
+      } catch (e) {
+        console.error('Failed to start recognition:', e);
+        setDictateUi('Could not start dictation. Try again.', true, false);
+      }
+    }
+
+    function stopDictation() {
+      try {
+        if (recognition) recognition.stop();
+      } catch (e) {
+        console.error('Failed to stop recognition:', e);
+      }
+    }
+
+    if (!SpeechRecognition) {
+      setDictateUi('Dictation not supported in this browser.', false, false);
+    } else {
+      setDictateUi('Ready', true, false);
+      dictateBtn.addEventListener('click', () => {
+        if (isDictating) stopDictation();
+        else startDictation();
+      });
+    }
+
+    // Speaker buttons
+    if (!canTts) {
+      if (speakSourceBtn) speakSourceBtn.disabled = true;
+      if (speakTranslationBtn) speakTranslationBtn.disabled = true;
+      setTtsUi('TTS not supported');
+    } else {
+      setTtsUi('Ready');
+      setSpeakButtonsState();
+
+      // Load saved voice speed
+      const savedRate = parseFloat(localStorage.getItem('ttsRate') || '1');
+      if (!Number.isNaN(savedRate) && savedRate > 0) ttsRate = savedRate;
+      if (ttsRateSelect) {
+        ttsRateSelect.value = String(ttsRate);
+        ttsRateSelect.addEventListener('change', () => {
+          const next = parseFloat(ttsRateSelect.value || '1');
+          if (!Number.isNaN(next) && next > 0) {
+            ttsRate = next;
+            localStorage.setItem('ttsRate', String(ttsRate));
+          }
+        });
+      }
+
+      if (speakSourceBtn) {
+        speakSourceBtn.addEventListener('click', () => {
+          const lang = sourceLanguage.value === 'auto' ? 'en-US' : getLangTagForSelectValue(sourceLanguage.value, 'en-US');
+          speak(sourceText.value, lang, 'source');
+        });
+      }
+      if (speakTranslationBtn) {
+        speakTranslationBtn.addEventListener('click', () => {
+          const lang = getLangTagForSelectValue(targetLanguage.value, 'en-US');
+          speak(translatedText.value, lang, 'translation');
+        });
+      }
+    }
 
     // Character counter
     sourceText.addEventListener('input', () => {
@@ -347,80 +731,75 @@
 
       try {
         // Use MyMemory Translation API (free, CORS-enabled)
-        // If auto-detect, try to detect language first
-        let detectedSourceLang = sourceLang;
-        
+        async function fetchTranslation(fromLang) {
+          const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|${targetLang}`;
+          let resp;
+          try {
+            resp = await fetch(url, {
+              method: 'GET',
+              headers: { 'Accept': 'application/json' },
+              mode: 'cors'
+            });
+          } catch (fetchError) {
+            if (fetchError.message.includes('CORS') || fetchError.message.includes('Failed to fetch')) {
+              throw new Error('CORS_ERROR: Please run from a web server (not file://). Use: python -m http.server 8000');
+            }
+            throw fetchError;
+          }
+
+          if (!resp.ok) throw new Error(`Translation service error: ${resp.status}`);
+          const json = await resp.json();
+          const translated = (json.responseData?.translatedText || '').trim();
+          const match = parseFloat(json.responseData?.match || '0');
+          return { json, translated, match };
+        }
+
+        // Auto-detect: MyMemory doesn't support auto, so we probe common sources and pick best result
         if (sourceLang === 'auto') {
-          // For auto-detect, try English first (most common), or use a detection API
-          // MyMemory doesn't support auto-detect, so we'll try common languages
-          detectedSourceLang = 'en';
-        }
+          // Prioritize likely languages; include 'de' so German->English works.
+          const candidates = ['de', 'es', 'fr', 'it', 'pt', 'ru', 'nl', 'pl', 'tr', 'sv', 'da', 'no', 'fi', 'ar', 'hi', 'ja', 'ko', 'zh', 'en'];
+          let best = null;
 
-        // MyMemory Translation API - free tier with CORS support
-        // Using JSONP approach for better CORS compatibility
-        const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${detectedSourceLang}|${targetLang}`;
-        
-        // Try direct fetch first
-        let response;
-        try {
-          response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-            },
-            mode: 'cors'
-          });
-        } catch (fetchError) {
-          // If CORS fails, try JSONP approach
-          if (fetchError.message.includes('CORS') || fetchError.message.includes('Failed to fetch')) {
-            throw new Error('CORS_ERROR: Please run from a web server (not file://). Use: python -m http.server 8000');
-          }
-          throw fetchError;
-        }
+          for (const lang of candidates) {
+            // Skip same-language pairs to avoid returning identical text
+            if (lang === targetLang) continue;
+            try {
+              const { json, translated, match } = await fetchTranslation(lang);
+              if (json.responseStatus !== 200) continue;
+              // Accept only translations that actually change the text
+              if (!translated || translated === text) continue;
 
-        if (!response.ok) {
-          throw new Error(`Translation service error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        if (data.responseStatus !== 200) {
-          // If translation fails, try with English as source
-          if (sourceLang === 'auto' && detectedSourceLang === 'en') {
-            // Try detecting by attempting translation from common languages
-            const commonLangs = ['es', 'fr', 'de', 'it', 'pt', 'ru'];
-            let translated = false;
-            
-            for (const lang of commonLangs) {
-              try {
-                const testUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${lang}|${targetLang}`;
-                const testResponse = await fetch(testUrl, { mode: 'cors' });
-                const testData = await testResponse.json();
-                
-                if (testData.responseStatus === 200 && testData.responseData && testData.responseData.translatedText) {
-                  translatedText.value = testData.responseData.translatedText;
-                  translatedCount.textContent = translatedText.value.length;
-                  translated = true;
-                  break;
-                }
-              } catch (e) {
-                continue;
+              if (!best || match > best.match) {
+                best = { lang, translated, match };
+                // If we have a very confident match, stop early
+                if (match >= 0.95) break;
               }
+            } catch (e) {
+              // Try next candidate
+              continue;
             }
-            
-            if (!translated) {
-              throw new Error('Could not detect source language. Please select it manually.');
-            }
-          } else {
-            throw new Error(data.responseData?.error || 'Translation failed. Please try again.');
           }
+
+          if (!best) {
+            throw new Error('Could not auto-detect source language. Please select it manually.');
+          }
+
+          translatedText.value = best.translated;
+          translatedCount.textContent = translatedText.value.length;
         } else {
-          // Success
-          const translatedTextValue = data.responseData?.translatedText || '';
-          if (!translatedTextValue || translatedTextValue === text) {
+          // Manual source language
+          if (sourceLang === targetLang) {
+            throw new Error('Source and target languages cannot be the same.');
+          }
+
+          const { json, translated } = await fetchTranslation(sourceLang);
+          if (json.responseStatus !== 200) {
+            throw new Error(json.responseData?.error || 'Translation failed. Please try again.');
+          }
+          if (!translated || translated === text) {
             throw new Error('Translation returned same text. Please check language selection.');
           }
-          translatedText.value = translatedTextValue;
+          translatedText.value = translated;
           translatedCount.textContent = translatedText.value.length;
         }
         

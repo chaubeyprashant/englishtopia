@@ -51,7 +51,10 @@
       
       if (result.success) {
         showMessage("Login successful!", 'success', 'login-message');
-        setTimeout(() => window.location.href = "profile.html", 1000);
+        // Redirect back to requested page (if provided), otherwise go to app home
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect') || 'homepage.html';
+        setTimeout(() => window.location.href = redirect, 500);
       } else {
         showMessage(result.message, 'error', 'login-message');
       }

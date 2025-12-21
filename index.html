@@ -33,6 +33,7 @@
     
     <div class="content-right">
       <div class="icon-placeholder">
+        <img src="https://via.placeholder.com/200x200/2a9d8f/ffffff?text=⭐" alt="Star icon" class="icon-image">
         <div class="arrows">
           <div class="arrow"></div>
           <div class="arrow"></div>
@@ -51,7 +52,12 @@
   <script>
     // Landing page specific functionality
     addEventListeners('[data-action="get-started"]', 'Get started button', () => {
-      window.location.href = 'homepage.html';
+      // Require login before entering the app
+      if (typeof isLoggedIn === 'function' && !isLoggedIn()) {
+        redirectToLogin('homepage.html');
+      } else {
+        window.location.href = 'homepage.html';
+      }
     });
   </script>
 </body>

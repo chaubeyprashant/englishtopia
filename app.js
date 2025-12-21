@@ -155,11 +155,72 @@ function getCurrentUser() {
 }
 
 /**
- * Gets the home page URL (always returns homepage.html).
- * @returns {string} URL to homepage.html
+ * Gets the home page URL.
+ * - If logged in: returns homepage.html
+ * - If logged out: returns index.html (launch page)
+ * @returns {string}
  */
 function getHomeUrl() {
-  return "homepage.html";
+  return isLoggedIn() ? "homepage.html" : "index.html";
+}
+
+/**
+ * Returns the current page filename (e.g. "index.html"). If not determinable, returns "".
+ * @returns {string}
+ */
+function getCurrentPage() {
+  try {
+    const path = window.location.pathname || "";
+    return path.split("/").pop() || "";
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Returns whether the user is currently logged in.
+ * @returns {boolean}
+ */
+function isLoggedIn() {
+  return localStorage.getItem("loggedIn") === "true";
+}
+
+/**
+ * Redirects to login page with an optional redirect target.
+ * @param {string} [redirectTo]
+ * @returns {void}
+ */
+function redirectToLogin(redirectTo) {
+  const target = redirectTo || getCurrentPage() || "homepage.html";
+  const url = `login.html?redirect=${encodeURIComponent(target)}`;
+  window.location.replace(url);
+}
+
+/**
+ * Enforces login for all non-public pages.
+ * - If not logged in and on a protected page -> redirect to login
+ * - If logged in and on login/signup/launch -> redirect to homepage
+ * @returns {void}
+ */
+function enforceAuthGuard() {
+  const page = getCurrentPage();
+  const publicPages = new Set(["", "index.html", "login.html", "signup.html"]);
+
+  if (!isLoggedIn() && !publicPages.has(page)) {
+    redirectToLogin(page);
+    return;
+  }
+
+  if (isLoggedIn() && (page === "login.html" || page === "signup.html")) {
+    window.location.replace(getHomeUrl());
+  }
+}
+
+// Run the auth guard as early as possible (prevents accessing protected pages before DOMContentLoaded)
+try {
+  enforceAuthGuard();
+} catch (e) {
+  console.warn("Auth guard failed:", e);
 }
 
 /* ===========================================

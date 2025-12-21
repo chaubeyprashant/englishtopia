@@ -146,15 +146,25 @@
 
       // Update button states
       document.getElementById("prev-button").disabled = currentQuestionIndex === 0;
-      document.getElementById("next-button").textContent = 
+      const nextBtn = document.getElementById("next-button");
+      nextBtn.textContent =
         currentQuestionIndex === levelTestQuestions.length - 1 ? "Submit Test" : "Next Question";
+      // Disable Next until an answer is selected for this question
+      nextBtn.disabled = userAnswers[currentQuestionIndex] === undefined || userAnswers[currentQuestionIndex] === null;
     }
 
     function selectAnswer(answerIndex) {
       userAnswers[currentQuestionIndex] = answerIndex;
+      // Enable Next once an option is selected
+      const nextBtn = document.getElementById("next-button");
+      if (nextBtn) nextBtn.disabled = false;
     }
 
     function nextQuestion() {
+      if (userAnswers[currentQuestionIndex] === undefined || userAnswers[currentQuestionIndex] === null) {
+        alert("Please select an answer before proceeding.");
+        return;
+      }
       if (currentQuestionIndex < levelTestQuestions.length - 1) {
         currentQuestionIndex++;
         renderQuestion();
