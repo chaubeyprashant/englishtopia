@@ -222,21 +222,19 @@ function enforceAuthGuard() {
   const href = String(window.location.href || "");
   // Force-detect common public pages even if pathname parsing is weird
   let page = normalizePage(getCurrentPage());
-  if (href.includes("signup.html")) page = "signup.html";
-  if (href.includes("login.html")) page = "login.html";
-  if (href.endsWith("/index.html") || href.includes("index.html")) page = "index.html";
-
-  const publicPages = new Set(["", "index.html", "login.html", "signup.html"]);
-  // Some file:// / hosting setups can produce empty/odd filenames; be tolerant.
-  const isPublic = publicPages.has(page);
+  // Netlify Pretty URLs may serve /signup instead of /signup.html, so allow both.
+  const slug = (page || "").replace(/\.html$/i, "");
+  const effectiveSlug = slug || "index";
+  const publicSlugs = new Set(["index", "login", "signup"]);
+  const isPublic = publicSlugs.has(effectiveSlug);
 
   if (!isLoggedIn() && !isPublic) {
-    console.warn("[auth] redirecting to login", { page, href });
-    redirectToLogin(page);
+    console.warn("[auth] redirecting to login", { page, slug: effectiveSlug, href });
+    redirectToLogin(page || effectiveSlug);
     return;
   }
 
-  if (isLoggedIn() && (page === "login.html" || page === "signup.html")) {
+  if (isLoggedIn() && (effectiveSlug === "login" || effectiveSlug === "signup" || page === "login.html" || page === "signup.html")) {
     window.location.replace(getHomeUrl());
   }
 }

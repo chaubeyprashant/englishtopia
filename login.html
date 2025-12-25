@@ -53,7 +53,13 @@
         showMessage("Login successful!", 'success', 'login-message');
         // Redirect back to requested page (if provided), otherwise go to app home
         const params = new URLSearchParams(window.location.search);
-        const redirect = params.get('redirect') || 'homepage.html';
+        let redirect = params.get('redirect') || 'homepage.html';
+        // Netlify Pretty URLs may provide "signup" instead of "signup.html". Normalize to .html for safety.
+        if (redirect && !redirect.includes('.') && !redirect.endsWith('/')) {
+          redirect = `${redirect}.html`;
+        } else if (redirect && redirect.startsWith('/') && !redirect.includes('.') && !redirect.endsWith('/')) {
+          redirect = `${redirect}.html`;
+        }
         setTimeout(() => window.location.href = redirect, 500);
       } else {
         showMessage(result.message, 'error', 'login-message');
