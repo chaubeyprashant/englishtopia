@@ -170,8 +170,15 @@ function getHomeUrl() {
  */
 function getCurrentPage() {
   try {
-    const path = window.location.pathname || "";
-    return path.split("/").pop() || "";
+    // Prefer parsing from full href for file:// and odd hosting setups
+    const href = String(window.location.href || "");
+    const htmlMatch = href.match(/\/([^\/?#]+\.html)(?:[?#]|$)/i);
+    if (htmlMatch && htmlMatch[1]) return htmlMatch[1];
+
+    const path = String(window.location.pathname || "");
+    const last = path.split("/").pop() || "";
+    // Some servers may not include .html in the path; fall back to last segment anyway.
+    return last;
   } catch {
     return "";
   }
@@ -212,12 +219,19 @@ function redirectToLogin(redirectTo) {
  * @returns {void}
  */
 function enforceAuthGuard() {
-  const page = normalizePage(getCurrentPage());
+  const href = String(window.location.href || "");
+  // Force-detect common public pages even if pathname parsing is weird
+  let page = normalizePage(getCurrentPage());
+  if (href.includes("signup.html")) page = "signup.html";
+  if (href.includes("login.html")) page = "login.html";
+  if (href.endsWith("/index.html") || href.includes("index.html")) page = "index.html";
+
   const publicPages = new Set(["", "index.html", "login.html", "signup.html"]);
   // Some file:// / hosting setups can produce empty/odd filenames; be tolerant.
   const isPublic = publicPages.has(page);
 
   if (!isLoggedIn() && !isPublic) {
+    console.warn("[auth] redirecting to login", { page, href });
     redirectToLogin(page);
     return;
   }
