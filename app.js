@@ -178,6 +178,15 @@ function getCurrentPage() {
 }
 
 /**
+ * Normalizes a page identifier by stripping query/hash.
+ * @param {string} page
+ * @returns {string}
+ */
+function normalizePage(page) {
+  return String(page || "").split("?")[0].split("#")[0];
+}
+
+/**
  * Returns whether the user is currently logged in.
  * @returns {boolean}
  */
@@ -191,7 +200,7 @@ function isLoggedIn() {
  * @returns {void}
  */
 function redirectToLogin(redirectTo) {
-  const target = redirectTo || getCurrentPage() || "homepage.html";
+  const target = normalizePage(redirectTo || getCurrentPage() || "homepage.html");
   const url = `login.html?redirect=${encodeURIComponent(target)}`;
   window.location.replace(url);
 }
@@ -203,10 +212,12 @@ function redirectToLogin(redirectTo) {
  * @returns {void}
  */
 function enforceAuthGuard() {
-  const page = getCurrentPage();
+  const page = normalizePage(getCurrentPage());
   const publicPages = new Set(["", "index.html", "login.html", "signup.html"]);
+  // Some file:// / hosting setups can produce empty/odd filenames; be tolerant.
+  const isPublic = publicPages.has(page);
 
-  if (!isLoggedIn() && !publicPages.has(page)) {
+  if (!isLoggedIn() && !isPublic) {
     redirectToLogin(page);
     return;
   }
