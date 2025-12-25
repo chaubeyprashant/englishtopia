@@ -65,8 +65,15 @@
       const result = signupUser(username, email, password);
       
       if (result.success) {
-        showMessage("Account created! Redirecting to login...", 'success', 'signup-message');
-        setTimeout(() => window.location.href = "login.html", 1000);
+        // Auto-login after successful signup (better UX)
+        const loginResult = loginUser(email, password);
+        if (loginResult && loginResult.success) {
+          showMessage("Account created! Logging you in...", 'success', 'signup-message');
+          setTimeout(() => window.location.href = "homepage.html", 600);
+        } else {
+          showMessage("Account created! Redirecting to login...", 'success', 'signup-message');
+          setTimeout(() => window.location.href = "login.html", 800);
+        }
       } else {
         showMessage(result.message, 'error', 'signup-message');
       }
