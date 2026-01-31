@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -343,10 +344,11 @@
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="#" class="nav-button" id="home-link">🏠 Home</a>
+    <a href="homepage.html" class="nav-button" id="home-link">🏠 Home</a>
     <button class="nav-button" onclick="window.location.href='quizzes.html'">❓ Quizzes</button>
     <button class="nav-button" onclick="window.location.href='level-test.html'">♜ Test your level</button>
     <button class="nav-button" onclick="window.location.href='videos.html'">🎥 Videos</button>
@@ -361,7 +363,8 @@
     <h1>Your Multi-Media English Learning Hub</h1>
     <div class="video-box" onclick="window.location.href='videos.html'">
       <video autoplay loop muted playsinline>
-        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
@@ -390,28 +393,18 @@
   </div>
   <script src="app.js"></script>
   <script>
-    // Set home link dynamically
-    const homeLink = document.getElementById('home-link');
-    if (homeLink) {
-      homeLink.href = getHomeUrl();
-      homeLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = getHomeUrl();
-      });
-    }
-
     // Update progress bar based on highest level achieved
     function updateProgressBar() {
       const highestLevel = getHighestLevel();
       const progress = getLevelProgress(highestLevel);
-      
+
       const levelLabel = document.getElementById('level-label');
       const progressBar = document.getElementById('progress-bar');
-      
+
       if (levelLabel) {
         levelLabel.textContent = highestLevel;
       }
-      
+
       if (progressBar) {
         progressBar.style.width = progress + '%';
         progressBar.textContent = progress + '%';
@@ -426,7 +419,7 @@
     }
 
     // Update progress bar when page becomes visible (user returns from test)
-    document.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', function () {
       if (!document.hidden) {
         updateProgressBar();
       }
@@ -436,4 +429,5 @@
     window.addEventListener('focus', updateProgressBar);
   </script>
 </body>
+
 </html>

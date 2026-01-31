@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,11 @@
   <link href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.0/open-dyslexic.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="homepage.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -24,13 +26,13 @@
     <h2>Settings</h2>
     <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
       <div class="settings-card">
-      <label>
-        Font:
-        <select id="font-select" data-action="change-font">
-          <option value="Inter, sans-serif">Default</option>
-          <option value="OpenDyslexic">Dyslexia</option>
-        </select>
-      </label>
+        <label>
+          Font:
+          <select id="font-select" data-action="change-font">
+            <option value="Inter, sans-serif">Default</option>
+            <option value="OpenDyslexic">Dyslexia</option>
+          </select>
+        </label>
         <button class="btn" data-action="reset-data">Reset Data</button>
         <button class="btn" data-action="delete-account">Delete Account</button>
       </div>
@@ -38,13 +40,6 @@
   </main>
 
   <script src="app.js"></script>
-  <script>
-    // Update home link
-    document.addEventListener('DOMContentLoaded', () => {
-      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
-      if (homeLink) homeLink.href = getHomeUrl();
-    });
-  </script>
   <script>
     // Settings page specific functionality
     function handleResetData() {
@@ -77,4 +72,5 @@
     });
   </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="homepage.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -22,18 +24,18 @@
     <h2>Sign Up</h2>
     <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
       <form id="signupForm" class="form-container">
-      <div class="form-group">
-        <label for="signup-username">Username</label>
-        <input type="text" id="signup-username" required>
-      </div>
-      <div class="form-group">
-        <label for="signup-email">Email</label>
-        <input type="email" id="signup-email" required>
-      </div>
-      <div class="form-group">
-        <label for="signup-password">Password</label>
-        <input type="password" id="signup-password" required>
-      </div>
+        <div class="form-group">
+          <label for="signup-username">Username</label>
+          <input type="text" id="signup-username" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required>
+        </div>
         <button type="submit" class="btn" data-action="signup">Create account</button>
       </form>
       <p id="signup-message" class="message"></p>
@@ -48,22 +50,22 @@
       const username = document.getElementById("signup-username").value;
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
-      
+
       // Validate inputs
       if (!isValidEmail(email)) {
         showMessage("Please enter a valid email address", 'error', 'signup-message');
         return;
       }
-      
+
       const passwordValidation = validatePassword(password);
       if (!passwordValidation.success) {
         showMessage(passwordValidation.message, 'error', 'signup-message');
         return;
       }
-      
+
       // Use the centralized signup function
       const result = signupUser(username, email, password);
-      
+
       if (result.success) {
         // Auto-login after successful signup (better UX)
         const loginResult = loginUser(email, password);
@@ -80,4 +82,5 @@
     });
   </script>
 </body>
+
 </html>

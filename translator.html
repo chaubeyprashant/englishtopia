@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -267,10 +268,11 @@
     }
   </style>
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="#" class="nav-button" id="home-link">🏠 Home</a>
+    <a href="homepage.html" class="nav-button" id="home-link">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -382,9 +384,6 @@
 
   <script src="app.js"></script>
   <script>
-    // Set home link
-    document.getElementById('home-link').href = getHomeUrl();
-
     const sourceLanguage = document.getElementById('source-language');
     const targetLanguage = document.getElementById('target-language');
     const sourceText = document.getElementById('source-text');
@@ -707,7 +706,7 @@
       translatedCount.textContent = translatedText.value.length;
     });
 
-    // Translation function using Google Translate API (free tier)
+    // Translation function using MyMemory API
     async function translateText() {
       const text = sourceText.value.trim();
       if (!text) {
@@ -754,28 +753,23 @@
           return { json, translated, match };
         }
 
-        // Auto-detect: MyMemory doesn't support auto, so we probe common sources and pick best result
+        // Auto-detect
         if (sourceLang === 'auto') {
-          // Prioritize likely languages; include 'de' so German->English works.
           const candidates = ['de', 'es', 'fr', 'it', 'pt', 'ru', 'nl', 'pl', 'tr', 'sv', 'da', 'no', 'fi', 'ar', 'hi', 'ja', 'ko', 'zh', 'en'];
           let best = null;
 
           for (const lang of candidates) {
-            // Skip same-language pairs to avoid returning identical text
             if (lang === targetLang) continue;
             try {
               const { json, translated, match } = await fetchTranslation(lang);
               if (json.responseStatus !== 200) continue;
-              // Accept only translations that actually change the text
               if (!translated || translated === text) continue;
 
               if (!best || match > best.match) {
                 best = { lang, translated, match };
-                // If we have a very confident match, stop early
                 if (match >= 0.95) break;
               }
             } catch (e) {
-              // Try next candidate
               continue;
             }
           }
@@ -788,10 +782,6 @@
           translatedCount.textContent = translatedText.value.length;
         } else {
           // Manual source language
-          if (sourceLang === targetLang) {
-            throw new Error('Source and target languages cannot be the same.');
-          }
-
           const { json, translated } = await fetchTranslation(sourceLang);
           if (json.responseStatus !== 200) {
             throw new Error(json.responseData?.error || 'Translation failed. Please try again.');
@@ -802,12 +792,10 @@
           translatedText.value = translated;
           translatedCount.textContent = translatedText.value.length;
         }
-        
+
         errorDiv.style.display = 'none';
       } catch (error) {
         console.error('Translation error:', error);
-        
-        // More user-friendly error messages
         let errorMessage = '';
         if (error.message.includes('CORS_ERROR')) {
           errorMessage = error.message.replace('CORS_ERROR: ', '');
@@ -822,7 +810,7 @@
         } else {
           errorMessage = error.message || 'Translation failed. Please try again.';
         }
-        
+
         errorDiv.textContent = errorMessage;
         errorDiv.style.display = 'block';
         translatedText.value = '';
@@ -849,5 +837,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>

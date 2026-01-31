@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +36,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       justify-content: center;
       align-items: center;
     }
@@ -96,8 +97,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .loader-text {
@@ -112,10 +118,11 @@
     }
   </style>
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="homepage.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -129,37 +136,49 @@
     <h2>Books</h2>
     <div class="grid">
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Alice%27s+Adventures" alt="Beginner's English" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Alice%27s+Adventures" alt="Beginner's English"
+          data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
         <h3>Alice's Adventures in Wonderland</h3>
         <p>Beginner-friendly classic story to improve your reading skills.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/11/11-h/11-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Frankenstein" alt="Intermediate Stories" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Frankenstein" alt="Intermediate Stories"
+          data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
         <h3>Frankenstein</h3>
         <p>Engaging classic novel to improve your reading comprehension.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/84/84-h/84-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Pride+and+Prejudice" alt="Advanced Literature" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Pride+and+Prejudice" alt="Advanced Literature"
+          data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
         <h3>Pride and Prejudice</h3>
         <p>Classic literature to enhance your reading and analytical skills.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Moby+Dick" alt="Deep Reader" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Moby+Dick" alt="Deep Reader"
+          data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
         <h3>Moby Dick</h3>
         <p>Advanced literature to master formal and conversational English.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/2701/2701-h/2701-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=The+Great+Gatsby" alt="The Great Gatsby" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm" onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/2a9d8f/ffffff?text=The+Great+Gatsby" alt="The Great Gatsby"
+          data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Book+Cover'">
         <h3>The Great Gatsby</h3>
         <p>American classic for intermediate to advanced readers.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm">Start reading</button>
       </div>
       <div class="card">
-        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Sherlock+Holmes" alt="Sherlock Holmes" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm" onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
+        <img src="https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Sherlock+Holmes" alt="Sherlock Holmes"
+          data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm"
+          onerror="this.src='https://via.placeholder.com/300x200/1e7a6c/ffffff?text=Book+Cover'">
         <h3>Adventures of Sherlock Holmes</h3>
         <p>Mystery stories to improve your reading and vocabulary.</p>
         <button class="btn" data-book="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm">Start reading</button>
@@ -190,12 +209,12 @@
     document.querySelectorAll('[data-book]').forEach(el => {
       el.addEventListener('click', () => {
         const bookURL = el.getAttribute('data-book');
-        
+
         // Show loader
         if (bookLoader) {
           bookLoader.classList.remove('hidden');
         }
-        
+
         bookFrame.src = bookURL;
         bookModal.style.display = 'flex';
       });
@@ -235,12 +254,8 @@
         closeBookModalFunc();
       }
     });
-    
-    // Update home link
-    const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
-    if (homeLink) {
-      homeLink.href = getHomeUrl();
-    }
+
   </script>
 </body>
+
 </html>
