@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="homepage.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -26,13 +28,6 @@
   </main>
 
   <script src="app.js"></script>
-  <script>
-    // Update home link
-    document.addEventListener('DOMContentLoaded', () => {
-      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
-      if (homeLink) homeLink.href = getHomeUrl();
-    });
-  </script>
   <script>
     // Profile page specific functionality
     const loggedIn = localStorage.getItem("loggedIn");
@@ -65,4 +60,5 @@
     addEventListeners('[data-action="login"]', 'Login button', () => window.location.href = 'login.html');
   </script>
 </body>
+
 </html>

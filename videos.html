@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="autoplay=(self https://www.youtube.com https://www.youtube-nocookie.com), encrypted-media=(self https://www.youtube.com https://www.youtube-nocookie.com), accelerometer=(self https://www.youtube.com https://www.youtube-nocookie.com), gyroscope=(self https://www.youtube.com https://www.youtube-nocookie.com), picture-in-picture=(self https://www.youtube.com https://www.youtube-nocookie.com), clipboard-write=(self https://www.youtube.com https://www.youtube-nocookie.com), web-share=(self https://www.youtube.com https://www.youtube-nocookie.com)">
+  <meta http-equiv="Permissions-Policy"
+    content="autoplay=(self https://www.youtube.com https://www.youtube-nocookie.com), encrypted-media=(self https://www.youtube.com https://www.youtube-nocookie.com), accelerometer=(self https://www.youtube.com https://www.youtube-nocookie.com), gyroscope=(self https://www.youtube.com https://www.youtube-nocookie.com), picture-in-picture=(self https://www.youtube.com https://www.youtube-nocookie.com), clipboard-write=(self https://www.youtube.com https://www.youtube-nocookie.com), web-share=(self https://www.youtube.com https://www.youtube-nocookie.com)">
   <title>Videos - Unolingo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -19,7 +21,7 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
     }
 
     .modal.show {
@@ -84,8 +86,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .loader-text {
@@ -100,10 +107,11 @@
     }
   </style>
 </head>
+
 <body class="sidebar-layout">
   <div class="sidebar">
     <div class="logo">Unolingo</div>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a href="homepage.html" class="nav-button">🏠 Home</a>
     <a href="quizzes.html" class="nav-button">❓ Quizzes</a>
     <a href="level-test.html" class="nav-button">♜ Test your level</a>
     <a href="videos.html" class="nav-button">🎥 Videos</a>
@@ -157,20 +165,22 @@
         <div class="spinner"></div>
         <div class="loader-text">Loading video...</div>
       </div>
-      <iframe id="videoFrame" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" frameborder="0" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <iframe id="videoFrame" src="" allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        frameborder="0" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </div>
 
   <script src="app.js"></script>
   <script>
     // Wait for DOM to be ready
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Modal elements
       const modal = document.getElementById('videoModal');
       const videoFrame = document.getElementById('videoFrame');
       const closeModal = document.getElementById('closeModal');
       const videoLoader = document.getElementById('videoLoader');
-      
+
       // Store original video URL for fallback
       let currentVideoUrl = '';
 
@@ -184,40 +194,40 @@
       // For local testing: Use a local HTTP server (not file:// protocol)
       // Run: python3 -m http.server 8000
       // Then access: http://localhost:8000/videos.html
-      
+
       // Detect if running from file:// protocol (won't work with YouTube)
       function getRelayUrl() {
         const origin = window.location.origin;
-        
+
         // If file:// protocol, show helpful error
         if (origin === 'null' || origin.startsWith('file://')) {
           console.error('YouTube embeds require HTTP server. Use: python3 -m http.server 8000');
           return null;
         }
-        
+
         // For local HTTP server or deployed site
         return origin + '/youtube-relay.html';
       }
-      
+
       const RELAY_URL = getRelayUrl();
-      
+
       // Convert YouTube URL to embed format using the relay
       function convertToEmbedUrl(url) {
         if (!url) return '';
-        
+
         // Check if relay URL is available
         if (!RELAY_URL) {
           console.error('Relay URL not available. Make sure you are using an HTTP server, not file:// protocol.');
           return null;
         }
-        
+
         // Extract video ID from various YouTube URL formats
         let videoId = '';
         const patterns = [
           /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube-nocookie\.com\/embed\/)([^&\n?#]+)/,
           /youtube\.com\/.*[?&]v=([^&\n?#]+)/
         ];
-        
+
         for (const pattern of patterns) {
           const match = url.match(pattern);
           if (match && match[1]) {
@@ -225,35 +235,35 @@
             break;
           }
         }
-        
+
         if (videoId) {
           // Use the YouTube Embed Relay to handle the embedding
           // The relay will handle all the YouTube API requirements
           return `${RELAY_URL}?v=${encodeURIComponent(videoId)}&playsinline=1&autoplay=0`;
         }
-        
+
         // If not a YouTube URL, return original (for other video sources)
         return url;
       }
 
       // Open modal when button clicked
       document.querySelectorAll('.btn[data-video]').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
           const videoURL = this.getAttribute('data-video');
           currentVideoUrl = videoURL; // Store for fallback
           const embedURL = convertToEmbedUrl(videoURL);
-          
+
           if (!RELAY_URL) {
             alert('YouTube videos require an HTTP server.\n\nPlease:\n1. Start a local server: python3 -m http.server 8000\n2. Access via: http://localhost:8000/videos.html\n\nOr deploy to a web hosting service.');
             return;
           }
-          
+
           if (embedURL) {
             // Show loader
             if (videoLoader) {
               videoLoader.classList.remove('hidden');
             }
-            
+
             // Clear any previous error state
             videoFrame.src = '';
             // Set the new source
@@ -266,7 +276,7 @@
           }
         });
       });
-      
+
       // Add a button in modal to open video directly on YouTube if embed fails
       const modalContent = document.querySelector('.modal-content');
       if (modalContent && !document.getElementById('openOnYouTubeBtn')) {
@@ -282,7 +292,7 @@
         });
         modalContent.appendChild(openOnYouTubeBtn);
       }
-      
+
       // Handle iframe load - hide loader when video loads
       videoFrame.addEventListener('load', () => {
         if (videoLoader) {
@@ -315,12 +325,7 @@
           modalContent.insertBefore(errorMsg, videoFrame);
         }
       });
-      
-      // Update home link
-      const homeLink = document.querySelector('a.nav-button[href*="index.html"]');
-      if (homeLink) {
-        homeLink.href = getHomeUrl();
-      }
+
 
       // Close modal function
       function closeModalFunc() {
@@ -353,4 +358,5 @@
     });
   </script>
 </body>
+
 </html>

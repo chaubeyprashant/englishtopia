@@ -36,8 +36,11 @@
  * Navigation Configuration
  * Defines the navigation items for the sidebar/header
  */
+const HOME_PAGE = "homepage.html";
+const LANDING_PAGE = "index.html";
+
 const navItems = [
-  { href: "homepage.html", label: "Home" },
+  { href: HOME_PAGE, label: "Home" },
   { href: "quizzes.html", label: "Quizzes" },
   { href: "level-test.html", label: "Test" },
   { href: "videos.html", label: "Videos" },
@@ -161,7 +164,7 @@ function getCurrentUser() {
  * @returns {string}
  */
 function getHomeUrl() {
-  return isLoggedIn() ? "homepage.html" : "index.html";
+  return isLoggedIn() ? HOME_PAGE : LANDING_PAGE;
 }
 
 /**
@@ -551,13 +554,21 @@ if (document.readyState === 'loading') {
  * @returns {void}
  */
 function updateHomeLinks() {
-  const homeLinks = document.querySelectorAll('a[href*="index.html"], a[href*="homepage.html"], .nav-button[href*="index"], .nav-button[href*="homepage"]');
+  const homeLinks = document.querySelectorAll('a[href*="index.html"], a[href*="homepage.html"], .nav-button[href*="index"], .nav-button[href*="homepage"], #home-link');
   const homeUrl = getHomeUrl();
   
   homeLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && (href.includes('index.html') || href.includes('homepage.html'))) {
+    // If it's a sidebar home button or explicitly marked as home, set it to HOME_PAGE or correct URL
+    const isSidebarHome = link.classList.contains('nav-button') && (link.textContent.includes('Home') || link.id === 'home-link');
+    
+    if (isSidebarHome) {
+      // Force home button to go to the app's home if logged in, otherwise landing
       link.setAttribute('href', homeUrl);
+    } else {
+      const href = link.getAttribute('href');
+      if (href && (href.includes('index.html') || href.includes('homepage.html'))) {
+        link.setAttribute('href', homeUrl);
+      }
     }
   });
   
