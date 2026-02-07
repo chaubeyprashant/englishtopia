@@ -40,7 +40,10 @@ const HOME_PAGE = "homepage.html";
 const LANDING_PAGE = "index.html";
 
 // API Configuration
-const API_BASE_URL = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+// API Configuration
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
+  ? 'http://localhost:3000'
+  : 'https://englishtopia-api.onrender.com'; // PLACEHOLDER: Update this after Render deployment
 
 const navItems = [
   { href: HOME_PAGE, label: "Home" },
@@ -122,10 +125,16 @@ async function signupUser(username, email, password) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
     });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { success: false, message: errorData.message || `Server error: ${response.status}` };
+    }
+
     return await response.json();
   } catch (error) {
     console.error('Signup error:', error);
-    return { success: false, message: 'Server connection failed. Is Node running?' };
+    return { success: false, message: 'Server connection failed. Is the backend running?' };
   }
 }
 
@@ -148,6 +157,12 @@ async function loginUser(email, password) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { success: false, message: errorData.message || `Login failed: ${response.status}` };
+    }
+
     const result = await response.json();
 
     if (result.success) {
