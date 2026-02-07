@@ -43,7 +43,7 @@ const LANDING_PAGE = "index.html";
 // API Configuration
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
   ? 'http://localhost:3000'
-  : 'https://englishtopia-api.onrender.com'; // PLACEHOLDER: Update this after Render deployment
+  : 'https://englishtopia.onrender.com';
 
 const navItems = [
   { href: HOME_PAGE, label: "Home" },
