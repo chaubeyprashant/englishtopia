@@ -92,6 +92,54 @@ app.get('/api/results/:userId', (req, res) => {
     });
 });
 
+// Get Latest Quiz Result
+app.get('/api/results/latest/:userId', (req, res) => {
+    const userId = req.params.userId;
+    db.query('SELECT * FROM quiz_results WHERE user_id = ? ORDER BY date_taken DESC LIMIT 1', [userId], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: 'Database error' });
+        res.json({ success: true, result: results[0] || null });
+    });
+});
+
+// Get User Profile
+app.get('/api/user/:userId', (req, res) => {
+    const userId = req.params.userId;
+    db.query('SELECT id, username, email, level, preferred_font FROM users WHERE id = ?', [userId], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: 'Database error' });
+        if (results.length === 0) return res.status(404).json({ success: false, message: 'User not found' });
+        res.json({ success: true, user: results[0] });
+    });
+});
+
+// Update User Level/Settings
+app.put('/api/user/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const { level, preferred_font } = req.body;
+
+    let query = 'UPDATE users SET ';
+    let params = [];
+    let updates = [];
+
+    if (level) {
+        updates.push('level = ?');
+        params.push(level);
+    }
+    if (preferred_font) {
+        updates.push('preferred_font = ?');
+        params.push(preferred_font);
+    }
+
+    if (updates.length === 0) return res.status(400).json({ success: false, message: 'No fields to update' });
+
+    query += updates.join(', ') + ' WHERE id = ?';
+    params.push(userId);
+
+    db.query(query, params, (err) => {
+        if (err) return res.status(500).json({ success: false, message: 'Database error' });
+        res.json({ success: true, message: 'Profile updated' });
+    });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

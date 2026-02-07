@@ -394,7 +394,10 @@
   <script src="app.js"></script>
   <script>
     // Update progress bar based on highest level achieved
-    function updateProgressBar() {
+    async function updateProgressBar() {
+      // Sync with server first to get latest level
+      await syncUserProfile();
+
       const highestLevel = getHighestLevel();
       const progress = getLevelProgress(highestLevel);
 

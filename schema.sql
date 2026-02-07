@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   level VARCHAR(20) DEFAULT 'Beginner',
+  preferred_font VARCHAR(100) DEFAULT 'Inter, sans-serif',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
