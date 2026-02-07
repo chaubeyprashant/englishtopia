@@ -30,34 +30,43 @@
   <script src="app.js"></script>
   <script>
     // Profile page specific functionality
-    const loggedIn = localStorage.getItem("loggedIn");
-    const box = document.getElementById("profile-box");
+    async function initProfile() {
+      const loggedIn = localStorage.getItem("loggedIn");
+      const box = document.getElementById("profile-box");
 
-    if (loggedIn) {
-      const currentUser = getCurrentUser();
-      const userLevel = localStorage.getItem("userLevel") || "Not tested yet";
-      box.innerHTML = `
-        <h2>Your Profile</h2>
-        <p><b>Name:</b> ${currentUser ? currentUser.username : 'Demo User'}</p>
-        <p><b>Email:</b> ${currentUser ? currentUser.email : 'demo@example.com'}</p>
-        <p><b>Joined:</b> 1 Jan 2025</p>
-        <p><b>Level:</b> ${userLevel}</p>
-        <button class="btn" data-action="logout">Logout</button>
-      `;
-    } else {
-      box.innerHTML = `
-        <h2>Profile</h2>
-        <p>You are not logged in.</p>
-        <a href="login.html"><button class="btn" data-action="login">Login</button></a>
-      `;
+      if (loggedIn) {
+        // Sync with server to get latest data
+        await syncUserProfile();
+
+        const currentUser = getCurrentUser();
+        const userLevel = localStorage.getItem("userLevel") || "Not tested yet";
+        box.innerHTML = `
+          <h2>Your Profile</h2>
+          <p><b>Name:</b> ${currentUser ? currentUser.username : 'Demo User'}</p>
+          <p><b>Email:</b> ${currentUser ? currentUser.email : 'demo@example.com'}</p>
+          <p><b>Joined:</b> 1 Jan 2025</p>
+          <p><b>Level:</b> ${userLevel}</p>
+          <button class="btn" data-action="logout">Logout</button>
+        `;
+
+        // Re-attach listeners after innerHTML update
+        const logoutBtn = box.querySelector('[data-action="logout"]');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', () => {
+            logoutUser();
+            window.location.href = "login.html";
+          });
+        }
+      } else {
+        box.innerHTML = `
+          <h2>Profile</h2>
+          <p>You are not logged in.</p>
+          <a href="login.html"><button class="btn" data-action="login">Login</button></a>
+        `;
+      }
     }
 
-    // Event handlers for profile buttons
-    addEventListeners('[data-action="logout"]', 'Logout button', () => {
-      logoutUser();
-      window.location.href = "login.html";
-    });
-    addEventListeners('[data-action="login"]', 'Login button', () => window.location.href = 'login.html');
+    initProfile();
   </script>
 </body>
 

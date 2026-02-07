@@ -39,6 +39,9 @@
 const HOME_PAGE = "homepage.html";
 const LANDING_PAGE = "index.html";
 
+// API Configuration
+const API_BASE_URL = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+
 const navItems = [
   { href: HOME_PAGE, label: "Home" },
   { href: "quizzes.html", label: "Quizzes" },
@@ -58,10 +61,10 @@ const navItems = [
 function buildNavbar() {
   const nav = document.getElementById("navbar");
   if (!nav) return; // Exit if navbar element doesn't exist
-  
+
   // Get the current page filename from the URL
   const current = window.location.pathname.split("/").pop();
-  
+
   // Generate HTML for navigation items
   nav.innerHTML = navItems.map(
     item => `<a href="${item.href}" class="${item.href === current ? "active" : ""}">${item.label}</a>`
@@ -105,19 +108,25 @@ function saveUsers(users) {
  * @param {string} password
  * @returns {Result}
  */
-function signupUser(username, email, password) {
-  const users = getUsers();
-  
-  // Check if email already exists
-  if (users.find(u => u.email === email)) {
-    return { success: false, message: "Email already exists" };
+/**
+ * Registers a new user via API.
+ * @param {string} username
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Result>}
+ */
+async function signupUser(username, email, password) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password })
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Signup error:', error);
+    return { success: false, message: 'Server connection failed. Is Node running?' };
   }
-  
-  // Add new user to the array
-  users.push({ username, email, password });
-  saveUsers(users);
-  
-  return { success: true, message: "Account created" };
 }
 
 /**
@@ -126,18 +135,79 @@ function signupUser(username, email, password) {
  * @param {string} password
  * @returns {Result}
  */
-function loginUser(email, password) {
-  const users = getUsers();
-  const user = users.find(u => u.email === email && u.password === password);
-  
-  if (user) {
-    // Set login session
-    localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    return { success: true, user };
+/**
+ * Authenticates a user via API.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Result>}
+ */
+async function loginUser(email, password) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("currentUser", JSON.stringify(result.user));
+
+      // Synchronize user level state
+      if (result.user.level) {
+        syncUserLevel(result.user.level);
+      }
+    }
+    return result;
+  } catch (error) {
+    console.error('Login error:', error);
+    return { success: false, message: 'Server connection failed' };
   }
-  
-  return { success: false, message: "Invalid email or password" };
+}
+
+/**
+ * Synchronizes user level data across storage.
+ * @param {string} rawLevel 
+ */
+function syncUserLevel(rawLevel) {
+  if (!rawLevel) return;
+  localStorage.setItem("userLevel", rawLevel);
+  // Map DB levels to display levels if needed
+  const levelMap = {
+    "A1": "Beginner", "A2": "Elementary", "B1": "Elementary",
+    "B": "Intermediate", "B+": "Intermediate", "C1": "Intermediate", "A": "Advanced"
+  };
+  const mappedLevel = levelMap[rawLevel] || rawLevel;
+  localStorage.setItem("highestLevel", mappedLevel);
+}
+
+/**
+ * Fetches the freshest user data from the server.
+ * @returns {Promise<User|null>}
+ */
+async function syncUserProfile() {
+  const user = getCurrentUser();
+  if (!user || !user.id) return null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/user/${user.id}`);
+    const result = await response.json();
+    if (result.success) {
+      localStorage.setItem("currentUser", JSON.stringify(result.user));
+      syncUserLevel(result.user.level);
+
+      // Apply saved font preference
+      if (result.user.preferred_font) {
+        localStorage.setItem("preferredFont", result.user.preferred_font);
+        changeFont(result.user.preferred_font, false); // Pass false to avoid redundant API call
+      }
+      return result.user;
+    }
+  } catch (e) {
+    console.error('Failed to sync profile:', e);
+  }
+  return user;
 }
 
 /**
@@ -147,6 +217,10 @@ function loginUser(email, password) {
 function logoutUser() {
   localStorage.removeItem("loggedIn");
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("highestLevel");
+  localStorage.removeItem("userLevel");
+  localStorage.removeItem("levelTestResults");
+  localStorage.removeItem("quizResults");
 }
 
 /**
@@ -268,7 +342,7 @@ function addEventListeners(selector, action, callback) {
       console.log(`${action} clicked`);
       callback();
     });
-    
+
     // Add touch event listener for mobile devices
     element.addEventListener('touchstart', (e) => {
       e.preventDefault(); // Prevent click event from firing twice on touch devices
@@ -291,22 +365,22 @@ function addEventListeners(selector, action, callback) {
 function setupNavigation() {
   // Home navigation
   addEventListeners('[data-action="home"]', 'Home button', () => window.location.href = 'homepage.html');
-  
+
   // Quizzes navigation
   addEventListeners('[data-action="quizzes"]', 'Quizzes button', () => window.location.href = 'quizzes.html');
-  
+
   // Level test navigation
   addEventListeners('[data-action="test"]', 'Test button', () => window.location.href = 'level-test.html');
-  
+
   // Videos navigation
   addEventListeners('[data-action="videos"]', 'Videos button', () => window.location.href = 'videos.html');
-  
+
   // Books navigation
   addEventListeners('[data-action="books"]', 'Books button', () => window.location.href = 'books.html');
-  
+
   // Profile navigation
   addEventListeners('[data-action="profile"]', 'Profile button', () => window.location.href = 'profile.html');
-  
+
   // Settings navigation
   addEventListeners('[data-action="settings"]', 'Settings button', () => window.location.href = 'settings.html');
 }
@@ -348,7 +422,7 @@ function validatePassword(password) {
 function showMessage(message, type = 'info', elementId = 'message') {
   const messageElement = document.getElementById(elementId);
   if (!messageElement) return;
-  
+
   messageElement.textContent = message;
   messageElement.style.color = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#6b7280';
 }
@@ -363,26 +437,86 @@ function showMessage(message, type = 'info', elementId = 'message') {
  * @param {QuizResults} results
  * @returns {void}
  */
-function storeQuizResults(results) {
+/**
+ * Stores quiz results in localStorage and DB.
+ * @param {QuizResults} results
+ * @returns {Promise<void>}
+ */
+async function storeQuizResults(results) {
+  // Always save to local for immediate UI access
   localStorage.setItem('quizResults', JSON.stringify(results));
+
+  const user = getCurrentUser();
+  if (user && user.id) {
+    try {
+      await fetch(`${API_BASE_URL}/api/results`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          quizType: results.quizType || 'practice',
+          score: results.correctAnswers,
+          total: results.totalQuestions,
+          percentage: results.percentage,
+          level: results.overallLevel || null
+        })
+      });
+    } catch (e) {
+      console.error('Failed to sync result to DB:', e);
+    }
+  }
 }
 
 /**
- * Retrieves quiz results from localStorage (latest attempt).
- * @returns {QuizResults|null}
+ * Retrieves latest quiz results from API.
+ * @returns {Promise<QuizResults|null>}
  */
-function getQuizResults() {
+async function getQuizResults() {
+  const user = getCurrentUser();
+  if (!user || !user.id) return null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/results/latest/${user.id}`);
+    const result = await response.json();
+    if (result.success && result.result) {
+      return result.result;
+    }
+  } catch (e) {
+    console.error('Failed to fetch latest results:', e);
+  }
+
+  // Fallback to local if server fails
   const results = localStorage.getItem('quizResults');
   return results ? JSON.parse(results) : null;
 }
 
 /**
- * Stores level test results in localStorage.
+ * Stores level test results in localStorage and DB.
  * @param {LevelTestResults} results
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function storeLevelTestResults(results) {
+async function storeLevelTestResults(results) {
   localStorage.setItem("levelTestResults", JSON.stringify(results));
+
+  const user = getCurrentUser();
+  if (user && user.id) {
+    try {
+      await fetch(`${API_BASE_URL}/api/results`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          quizType: 'level-test',
+          score: results.correctAnswers,
+          total: results.totalQuestions,
+          percentage: results.percentage,
+          level: results.overallLevel
+        })
+      });
+    } catch (e) {
+      console.error('Failed to save level test result:', e);
+    }
+  }
 }
 
 /**
@@ -407,16 +541,16 @@ const LEVEL_HIERARCHY = ["Beginner", "Elementary", "Intermediate", "Advanced"];
  */
 function updateHighestLevel(newLevel) {
   if (!newLevel) return;
-  
+
   // Get current highest level, initializing if needed
   let currentHighest = localStorage.getItem("highestLevel");
   if (!currentHighest) {
     currentHighest = getHighestLevel(); // This will initialize from userLevel if available
   }
-  
+
   const currentIndex = LEVEL_HIERARCHY.indexOf(currentHighest);
   const newIndex = LEVEL_HIERARCHY.indexOf(newLevel);
-  
+
   // Only update if new level is higher than current highest
   if (newIndex > currentIndex) {
     localStorage.setItem("highestLevel", newLevel);
@@ -430,10 +564,12 @@ function updateHighestLevel(newLevel) {
  */
 function getHighestLevel() {
   let highestLevel = localStorage.getItem("highestLevel");
-  
-  // If no highestLevel is set, try to initialize from userLevel
+
+  // If no highestLevel is set, try to initialize from currentUser or userLevel
   if (!highestLevel) {
-    const userLevel = localStorage.getItem("userLevel");
+    const user = getCurrentUser();
+    const userLevel = user ? user.level : localStorage.getItem("userLevel");
+
     if (userLevel && userLevel !== "Not tested yet") {
       // Map userLevel to standard level format if needed
       const levelMap = {
@@ -445,9 +581,9 @@ function getHighestLevel() {
         "C1": "Intermediate",
         "A": "Advanced"
       };
-      
+
       const mappedLevel = levelMap[userLevel] || userLevel;
-      
+
       // Check if it's a valid level
       if (LEVEL_HIERARCHY.includes(mappedLevel)) {
         highestLevel = mappedLevel;
@@ -459,7 +595,7 @@ function getHighestLevel() {
       highestLevel = "Beginner";
     }
   }
-  
+
   return highestLevel;
 }
 
@@ -483,12 +619,29 @@ function getLevelProgress(level) {
 /**
  * Changes the font family for the entire application and persists the choice.
  * @param {string} font
+ * @param {boolean} [persist=true] Whether to save to server
  * @returns {void}
  */
-function changeFont(font) {
+async function changeFont(font, persist = true) {
   document.body.style.fontFamily = font || 'Inter, sans-serif';
-  // Store font preference in localStorage
+  // Store font preference in localStorage for immediate apply on next load
   localStorage.setItem('preferredFont', font);
+
+  // Persist to MySQL if logged in
+  if (persist) {
+    const user = getCurrentUser();
+    if (user && user.id) {
+      try {
+        await fetch(`${API_BASE_URL}/api/user/${user.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ preferred_font: font })
+        });
+      } catch (e) {
+        console.error('Failed to persist font choice:', e);
+      }
+    }
+  }
 }
 
 /**
@@ -523,21 +676,21 @@ function deleteAccount() {
  * Initialization entrypoint. Applies preferences, wires navigation, reports session state.
  * @returns {void}
  */
-function initializeApp() {
+async function initializeApp() {
   // Apply saved font preference
   const savedFont = localStorage.getItem('preferredFont');
   if (savedFont) {
     changeFont(savedFont);
   }
-  
+
   // Setup navigation
   setupNavigation();
-  
+
   // Check if user is logged in and update UI accordingly
-  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
-  if (isLoggedIn) {
-    // User is logged in - update any UI elements that depend on login state
-    console.log('User is logged in');
+  const user = getCurrentUser();
+  if (user) {
+    console.log('User is logged in, syncing profile...');
+    await syncUserProfile();
   }
 }
 
@@ -556,11 +709,11 @@ if (document.readyState === 'loading') {
 function updateHomeLinks() {
   const homeLinks = document.querySelectorAll('a[href*="index.html"], a[href*="homepage.html"], .nav-button[href*="index"], .nav-button[href*="homepage"], #home-link');
   const homeUrl = getHomeUrl();
-  
+
   homeLinks.forEach(link => {
     // If it's a sidebar home button or explicitly marked as home, set it to HOME_PAGE or correct URL
     const isSidebarHome = link.classList.contains('nav-button') && (link.textContent.includes('Home') || link.id === 'home-link');
-    
+
     if (isSidebarHome) {
       // Force home button to go to the app's home if logged in, otherwise landing
       link.setAttribute('href', homeUrl);
@@ -571,7 +724,7 @@ function updateHomeLinks() {
       }
     }
   });
-  
+
   // Also update onclick handlers
   const homeButtons = document.querySelectorAll('button[onclick*="index.html"], button[onclick*="homepage.html"]');
   homeButtons.forEach(btn => {

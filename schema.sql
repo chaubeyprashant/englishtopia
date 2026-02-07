@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  level VARCHAR(20) DEFAULT 'Beginner',
+  preferred_font VARCHAR(100) DEFAULT 'Inter, sans-serif',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS quiz_results (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  quiz_type VARCHAR(50),
+  score INT,
+  total INT,
+  percentage INT,
+  level_achieved VARCHAR(20),
+  date_taken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);

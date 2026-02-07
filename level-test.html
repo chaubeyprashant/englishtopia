@@ -175,15 +175,15 @@
       }
     }
 
-    function submitTest() {
+    async function submitTest() {
       const endTime = Date.now();
       const timeSpent = Math.round((endTime - startTime) / 1000); // in seconds
 
       const results = calculateLevelTestResults();
       results.timeSpent = timeSpent;
 
-      // Store results in localStorage
-      storeLevelTestResults(results);
+      // Store results in localStorage and DB
+      await storeLevelTestResults(results);
 
       // Store user level for profile
       localStorage.setItem("userLevel", results.overallLevel || "Not tested yet");
