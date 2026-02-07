@@ -45,7 +45,7 @@
   <script src="app.js"></script>
   <script>
     // Signup page specific functionality
-    document.getElementById("signupForm").addEventListener("submit", function (e) {
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const username = document.getElementById("signup-username").value;
       const email = document.getElementById("signup-email").value;
@@ -64,11 +64,11 @@
       }
 
       // Use the centralized signup function
-      const result = signupUser(username, email, password);
+      const result = await signupUser(username, email, password);
 
       if (result.success) {
         // Auto-login after successful signup (better UX)
-        const loginResult = loginUser(email, password);
+        const loginResult = await loginUser(email, password);
         if (loginResult && loginResult.success) {
           showMessage("Account created! Logging you in...", 'success', 'signup-message');
           setTimeout(() => window.location.href = "homepage.html", 600);
